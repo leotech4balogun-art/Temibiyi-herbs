@@ -1,219 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#0b5d2a">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Temibiyi Herbs">
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="logo.png">
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#1f7a4d">
 <title>Temibiyi Herbs Manager</title>
 <style>
-:root{--green:#0b5d2a;--dark:#063b1b;--gold:#d8a62a;--bg:#f4f7f3;--card:#fff;--text:#183022;--muted:#6d7b72;--danger:#b42318}
-*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
-header{background:linear-gradient(135deg,var(--dark),var(--green));color:white;padding:14px 18px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:5}
-header img{width:58px;height:58px;object-fit:contain;background:white;border-radius:12px;padding:3px}header h1{font-size:20px;margin:0}header p{margin:3px 0 0;font-size:12px;opacity:.85}
-nav{display:flex;gap:6px;overflow:auto;background:#fff;border-bottom:1px solid #ddd;padding:8px;position:sticky;top:86px;z-index:4}
-nav button{border:0;background:#eef3ef;color:var(--dark);padding:10px 13px;border-radius:9px;font-weight:700;white-space:nowrap;cursor:pointer}
-nav button.active{background:var(--green);color:white}
-main{max-width:1200px;margin:auto;padding:18px}.page{display:none}.page.active{display:block}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}.card{background:var(--card);border-radius:14px;padding:17px;box-shadow:0 2px 10px #0000000b;border:1px solid #e3e9e4}.label{font-size:12px;color:var(--muted)}.value{font-size:25px;font-weight:800;margin-top:7px}
-.panel{background:#fff;border-radius:14px;padding:18px;margin-top:16px;box-shadow:0 2px 10px #0000000b;border:1px solid #e3e9e4}
-h2{margin:0 0 14px;font-size:20px}.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
-label{font-size:12px;font-weight:700;color:#44534a;display:block;margin-bottom:5px}input,select{width:100%;padding:11px;border:1px solid #cbd5ce;border-radius:8px;font-size:14px;background:#fff}
-button.primary{background:var(--green);color:#fff;border:0;padding:11px 16px;border-radius:8px;font-weight:700;cursor:pointer}.secondary{background:#edf2ee;border:0;padding:10px 14px;border-radius:8px;cursor:pointer}.danger{background:#fff0ef;color:var(--danger);border:0;padding:8px 10px;border-radius:7px;cursor:pointer}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:10px;border-bottom:1px solid #e8ece9}th{background:#f4f7f4}.right{text-align:right}
-.empty{text-align:center;color:var(--muted);padding:25px}.small{font-size:12px;color:var(--muted)}.low{color:#b42318;font-weight:700}.ok{color:#087443;font-weight:700}
-#toast{position:fixed;bottom:20px;right:20px;background:#163c25;color:#fff;padding:12px 16px;border-radius:9px;display:none;z-index:20}
-.modal{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;padding:18px;z-index:10}.modal.show{display:flex}.modalbox{background:#fff;border-radius:15px;max-width:480px;width:100%;padding:20px}
-.receipt{font-family:monospace;border:1px dashed #777;padding:16px;background:#fff}.receipt h3{text-align:center;margin:0}.receipt .line{border-top:1px dashed #888;margin:8px 0}
-@media(max-width:600px){main{padding:10px}header{top:0}nav{top:86px}header img{width:50px;height:50px}}
-</style>
-</head>
-<body>
-<header>
-<img src="logo.png" alt="Temibiyi Herbs logo">
-<div><h1>Temibiyi Herbs Manager</h1><p>Sales • Stock • Expenses • Customers • Reports</p></div>
-</header>
-<nav id="nav">
-<button class="active" onclick="showPage('dashboard',this)">Dashboard</button>
-<button onclick="showPage('sales',this)">New Sale</button>
-<button onclick="showPage('products',this)">Products</button>
-<button onclick="showPage('expenses',this)">Expenses</button>
-<button onclick="showPage('customers',this)">Customers</button>
-<button onclick="showPage('reports',this)">Reports</button>
-<button onclick="showPage('settings',this)">Settings</button>
-</nav>
-
+:root{--g:#1f7a4d;--g2:#eaf5ee;--ink:#173b2a;--bg:#f5f8f6;--line:#dbe7df;--red:#b33a3a}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}header{background:var(--g);color:white;padding:18px 16px;position:sticky;top:0;z-index:20}header h1{margin:0;font-size:22px}header p{margin:4px 0 0;font-size:12px;opacity:.9}.user{float:right;background:#ffffff22;border:1px solid #ffffff55;padding:6px 9px;border-radius:9px;font-size:11px}nav{display:flex;gap:7px;overflow:auto;padding:10px;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:76px;z-index:19}nav button{border:0;background:#edf4ef;color:var(--ink);padding:10px 12px;border-radius:10px;font-weight:700;white-space:nowrap}nav button.active{background:var(--g);color:#fff}main{max-width:1100px;margin:auto;padding:15px}.page{display:none}.page.active{display:block}.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.card,.panel{background:#fff;border:1px solid var(--line);border-radius:14px}.card{padding:14px}.card small{color:#6d7d73}.amount{font-size:21px;font-weight:800;margin-top:5px}.panel{padding:15px;margin-top:14px}h2{font-size:18px;margin:0 0 12px}form{display:grid;gap:10px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}input,select{width:100%;padding:12px;border:1px solid #cbd9d0;border-radius:10px;background:#fff;font:inherit}.btn{border:0;border-radius:10px;padding:12px 14px;font-weight:800;background:var(--g);color:#fff}.btn.secondary{background:var(--g2);color:var(--ink)}.btn.danger{background:var(--red)}.btn.small{padding:8px 10px;font-size:12px}.actions{display:flex;gap:8px;flex-wrap:wrap}.tablewrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:700px}th,td{padding:10px;border-bottom:1px solid var(--line);text-align:left;font-size:13px}th{background:#f3f7f4}.empty{text-align:center;color:#748178;padding:20px}.notice{background:#eef8f1;border-left:4px solid var(--g);padding:12px;border-radius:8px;font-size:13px}.login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}.loginbox{width:min(430px,100%);background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px}.modal{display:none;position:fixed;inset:0;background:#0008;z-index:50;align-items:center;justify-content:center;padding:18px}.modal.show{display:flex}.modalbox{background:#fff;width:min(520px,100%);border-radius:16px;padding:18px;max-height:90vh;overflow:auto}.modalhead{display:flex;justify-content:space-between;align-items:center}.close{border:0;background:#eee;border-radius:9px;padding:8px}footer{text-align:center;color:#78867d;font-size:12px;padding:25px}@media(min-width:700px){.cards{grid-template-columns:repeat(4,1fr)}}
+</style></head><body>
+<div id="login" class="login"><div class="loginbox"><h1>🌿 Temibiyi Herbs</h1><p>Herbal Sales Manager</p><div class="panel" style="margin-top:15px"><form onsubmit="login(event)"><input id="loginName" placeholder="Your name" required><select id="loginRole"><option>Admin</option><option>Cashier</option></select><input id="loginPin" type="password" placeholder="PIN (default 1234)" required><button class="btn">Sign in</button></form><p style="font-size:12px;color:#718078">Default PIN: <b>1234</b>. Change it in Settings after signing in.</p></div></div></div>
+<div id="app" style="display:none"><header><span class="user" id="userBadge"></span><h1>Temibiyi Herbs</h1><p>Herbal Sales Manager • 08086689511 • 09029424609</p></header>
+<nav><button class="active" onclick="show('dashboard',this)">Dashboard</button><button onclick="show('sales',this)">Sales</button><button onclick="show('products',this)">Stock</button><button onclick="show('expenses',this)">Expenses</button><button onclick="show('reports',this)">Reports</button><button onclick="show('settings',this)">Settings</button></nav>
 <main>
-<section id="dashboard" class="page active">
-<h2>Business Dashboard</h2>
-<div class="cards">
-<div class="card"><div class="label">Today's Sales</div><div class="value" id="todaySales">₦0</div></div>
-<div class="card"><div class="label">Today's Profit</div><div class="value" id="todayProfit">₦0</div></div>
-<div class="card"><div class="label">Today's Expenses</div><div class="value" id="todayExpenses">₦0</div></div>
-<div class="card"><div class="label">Products in Stock</div><div class="value" id="stockCount">0</div></div>
-</div>
-<div class="panel"><h2>Low Stock</h2><div id="lowStock"></div></div>
-<div class="panel"><h2>Recent Sales</h2><div id="recentSales"></div></div>
-</section>
-
-<section id="sales" class="page">
-<div class="panel">
-<h2>Record New Sale</h2>
-<div class="row">
-<div><label>Product</label><select id="saleProduct" onchange="updateSalePrice()"></select></div>
-<div><label>Quantity</label><input id="saleQty" type="number" min="1" value="1" oninput="updateSaleTotal()"></div>
-<div><label>Selling Price (₦)</label><input id="salePrice" type="number" min="0" oninput="updateSaleTotal()"></div>
-<div><label>Payment</label><select id="salePayment"><option>Cash</option><option>Transfer</option><option>POS</option><option>Credit</option></select></div>
-<div><label>Customer (optional)</label><input id="saleCustomer" placeholder="Customer name"></div>
-</div>
-<p><b>Total: <span id="saleTotal">₦0</span></b></p>
-<div class="actions"><button class="primary" onclick="saveSale()">Save Sale & Generate Receipt</button></div>
-</div>
-<div class="panel"><h2>Sales History</h2><div id="salesTable"></div></div>
-</section>
-
-<section id="products" class="page">
-<div class="panel">
-<h2>Add Product</h2>
-<div class="row">
-<div><label>Product / Herb Name</label><input id="pName" placeholder="e.g. Herbal Mixture"></div>
-<div><label>Buying Price (₦)</label><input id="pBuy" type="number" min="0"></div>
-<div><label>Selling Price (₦)</label><input id="pSell" type="number" min="0"></div>
-<div><label>Opening Stock</label><input id="pStock" type="number" min="0"></div>
-<div><label>Low Stock Alert At</label><input id="pAlert" type="number" min="0" value="5"></div>
-</div>
-<div class="actions"><button class="primary" onclick="addProduct()">Add Product</button></div>
-</div>
-<div class="panel"><h2>Inventory</h2><div id="productsTable"></div></div>
-</section>
-
-<section id="expenses" class="page">
-<div class="panel">
-<h2>Record Expense</h2>
-<div class="row">
-<div><label>Description</label><input id="eDesc" placeholder="Transport, packaging, rent..."></div>
-<div><label>Amount (₦)</label><input id="eAmount" type="number" min="0"></div>
-</div>
-<div class="actions"><button class="primary" onclick="addExpense()">Save Expense</button></div>
-</div>
-<div class="panel"><h2>Expense History</h2><div id="expensesTable"></div></div>
-</section>
-
-<section id="customers" class="page">
-<div class="panel">
-<h2>Customer</h2>
-<div class="row">
-<div><label>Name</label><input id="cName"></div><div><label>Phone</label><input id="cPhone"></div>
-</div>
-<div class="actions"><button class="primary" onclick="addCustomer()">Save Customer</button></div>
-</div>
-<div class="panel"><h2>Customers</h2><div id="customersTable"></div></div>
-</section>
-
-<section id="reports" class="page">
-<div class="panel">
-<h2>Business Reports</h2>
-<div class="row">
-<div><label>From</label><input id="fromDate" type="date"></div>
-<div><label>To</label><input id="toDate" type="date"></div>
-</div>
-<div class="actions"><button class="primary" onclick="runReport()">Run Report</button><button class="secondary" onclick="exportData()">Export Backup</button><button class="secondary" onclick="printReport()">Print</button></div>
-</div>
-<div class="panel" id="reportResult"><div class="empty">Choose dates and run a report.</div></div>
-</section>
-
-<section id="settings" class="page">
-<div class="panel">
-<h2>App Settings</h2>
-<p class="small">Temibiyi Herbs Manager is designed to run on iPad, iPhone and laptop. This version is offline-first and ready for cloud synchronization.</p>
-<div class="row">
-<div><label>Business Name</label><input value="Temibiyi Herbs" disabled></div>
-<div><label>Phone</label><input value="08086689511 / 09029424609" disabled></div>
-</div>
-<div class="actions">
-<button class="secondary" onclick="installHelp()">iPad Installation Guide</button>
-<button class="secondary" onclick="exportData()">Backup My Data</button>
-<label class="secondary" style="display:inline-block;cursor:pointer">Restore Backup <input type="file" accept=".json" style="display:none" onchange="importData(event)"></label>
-</div>
-</div>
-<div class="panel">
-<h2>Cloud Synchronization</h2>
-<p>Cloud sync requires connecting the app to a database account. The app structure is prepared for this, but no private cloud credentials are embedded in this downloadable version.</p>
-<p class="small"><b>Recommended final setup:</b> one login for Admin, separate Cashier accounts, and one shared online database so the same sales and stock appear on every device.</p>
-</div>
-</section>
-</main>
-
-<div id="toast"></div>
-<div class="modal" id="receiptModal"><div class="modalbox"><div id="receiptContent"></div><div class="actions"><button class="primary" onclick="printReceipt()">Print Receipt</button><button class="secondary" onclick="closeReceipt()">Close</button></div></div></div>
-
+<section id="dashboard" class="page active"><div class="cards"><div class="card"><small>Today's Sales</small><div class="amount" id="todaySales">₦0</div></div><div class="card"><small>Total Sales</small><div class="amount" id="totalSales">₦0</div></div><div class="card"><small>Stock Items</small><div class="amount" id="productCount">0</div></div><div class="card"><small>Expenses</small><div class="amount" id="totalExpenses">₦0</div></div></div>
+<div class="panel"><h2>Quick Sale</h2><form onsubmit="quickSale(event)"><div class="row"><input id="qsProduct" list="productList" placeholder="Product / herb name" required><input id="qsAmount" type="number" min="0" step="0.01" placeholder="Amount (₦)" required></div><datalist id="productList"></datalist><button class="btn">Record Sale</button></form></div>
+<div class="panel"><div class="notice">Tip: Add your herbs under <b>Stock</b>. You can now edit the stock name, quantity, cost price and selling price after entering them.</div></div></section>
+<section id="sales" class="page"><div class="panel"><h2>Record Sale</h2><form onsubmit="addSale(event)"><div class="row"><input id="saleProduct" list="productList2" placeholder="Product / herb name" required><input id="saleQty" type="number" min="1" value="1"></div><datalist id="productList2"></datalist><div class="row"><input id="salePrice" type="number" min="0" step="0.01" placeholder="Unit price (₦)" required><select id="salePayment"><option>Cash</option><option>Transfer</option><option>POS</option></select></div><button class="btn">Save Sale</button></form></div><div class="panel"><h2>Sales History</h2><div class="tablewrap"><table><thead><tr><th>Date</th><th>Product</th><th>Qty</th><th>Total</th><th>Payment</th><th>Cashier</th><th></th></tr></thead><tbody id="salesBody"></tbody></table></div></div></section>
+<section id="products" class="page"><div class="panel"><h2>Add Stock / Herb</h2><form onsubmit="addProduct(event)"><div class="row"><input id="prodName" placeholder="Stock / herb name" required><input id="prodStock" type="number" min="0" value="0" placeholder="Quantity in stock"></div><div class="row"><input id="prodBuy" type="number" min="0" step="0.01" placeholder="Cost price (₦)"><input id="prodSell" type="number" min="0" step="0.01" placeholder="Selling price (₦)" required></div><button class="btn">Add Stock</button></form></div><div class="panel"><h2>Stock Management</h2><p style="font-size:13px;color:#718078">Use <b>Edit</b> whenever you want to rename a stock or change its quantity/prices.</p><div class="tablewrap"><table><thead><tr><th>Stock / Herb</th><th>Qty</th><th>Cost</th><th>Selling</th><th>Value</th><th>Action</th></tr></thead><tbody id="productsBody"></tbody></table></div></div></section>
+<section id="expenses" class="page"><div class="panel"><h2>Add Expense</h2><form onsubmit="addExpense(event)"><div class="row"><input id="expDesc" placeholder="Description" required><input id="expAmount" type="number" min="0" step="0.01" placeholder="Amount (₦)" required></div><button class="btn">Save Expense</button></form></div><div class="panel"><h2>Expenses</h2><div class="tablewrap"><table><thead><tr><th>Date</th><th>Description</th><th>Amount</th><th></th></tr></thead><tbody id="expensesBody"></tbody></table></div></div></section>
+<section id="reports" class="page"><div class="panel"><h2>Business Reports</h2><div id="reportText"></div><div class="actions"><button class="btn secondary" onclick="exportCSV()">Export Sales CSV</button><button class="btn secondary" onclick="backup()">Backup Data</button><label class="btn secondary" style="cursor:pointer">Restore Data<input type="file" accept="application/json" onchange="restore(event)" hidden></label></div></div></section>
+<section id="settings" class="page"><div class="panel"><h2>Settings</h2><form onsubmit="changePin(event)"><input id="newPin" type="password" placeholder="New PIN (4+ digits)" minlength="4" required><button class="btn">Change PIN</button></form></div><div class="panel"><h2>Account</h2><button class="btn secondary" onclick="logout()">Sign out</button></div><div class="panel"><div class="notice">This version stores data locally on the device. Backup your data regularly. Cloud synchronization can be added in the production version.</div></div></section>
+</main><footer>Temibiyi Herbs • Herbal Manager</footer></div>
+<div id="editModal" class="modal"><div class="modalbox"><div class="modalhead"><h2>Edit Stock</h2><button class="close" onclick="closeEdit()">✕</button></div><form onsubmit="saveEdit(event)"><input type="hidden" id="editId"><input id="editName" placeholder="Stock / herb name" required><div class="row"><input id="editStock" type="number" min="0" placeholder="Quantity"><input id="editBuy" type="number" min="0" step="0.01" placeholder="Cost price"></div><input id="editSell" type="number" min="0" step="0.01" placeholder="Selling price" required><button class="btn">Save Changes</button></form></div></div>
 <script>
-const KEY='temibiyi_herbs_manager_v1';
-let db=JSON.parse(localStorage.getItem(KEY)||'{"products":[],"sales":[],"expenses":[],"customers":[]}');
-const naira=n=>new Intl.NumberFormat('en-NG',{style:'currency',currency:'NGN',maximumFractionDigits:0}).format(Number(n)||0);
-const today=()=>new Date().toISOString().slice(0,10);
-function save(){localStorage.setItem(KEY,JSON.stringify(db));renderAll()}
-function toast(s){let t=document.getElementById('toast');t.textContent=s;t.style.display='block';setTimeout(()=>t.style.display='none',2200)}
-function showPage(id,btn){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));btn.classList.add('active');renderAll()}
-function addProduct(){
- let name=pName.value.trim(),buy=+pBuy.value,sell=+pSell.value,stock=+pStock.value,alert=+pAlert.value;
- if(!name||sell<0||stock<0){toast('Please enter product details');return}
- db.products.push({id:Date.now(),name,buy,sell,stock,alert});pName.value=pBuy.value=pSell.value=pStock.value='';pAlert.value=5;save();toast('Product added')}
-function addExpense(){let desc=eDesc.value.trim(),amount=+eAmount.value;if(!desc||amount<=0){toast('Enter expense details');return}db.expenses.push({id:Date.now(),date:today(),desc,amount});eDesc.value=eAmount.value='';save();toast('Expense saved')}
-function addCustomer(){let name=cName.value.trim(),phone=cPhone.value.trim();if(!name){toast('Enter customer name');return}db.customers.push({id:Date.now(),name,phone});cName.value=cPhone.value='';save();toast('Customer saved')}
-function updateSalePrice(){let p=db.products.find(x=>x.id==saleProduct.value);salePrice.value=p?p.sell:0;updateSaleTotal()}
-function updateSaleTotal(){saleTotal.textContent=naira((+saleQty.value||0)*(+salePrice.value||0))}
-function saveSale(){
- let p=db.products.find(x=>x.id==saleProduct.value),q=+saleQty.value,price=+salePrice.value,pay=salePayment.value,customer=saleCustomer.value.trim();
- if(!p||q<=0||price<0){toast('Select a product and valid quantity');return}
- if(p.stock<q){toast('Not enough stock');return}
- p.stock-=q;let s={id:Date.now(),date:today(),time:new Date().toLocaleTimeString(),productId:p.id,product:p.name,qty:q,price,total:q*price,buy:p.buy,payment:pay,customer};
- db.sales.unshift(s);save();showReceipt(s);saleQty.value=1;saleCustomer.value=''
+const KEY='temibiyi_herbs_v1', AUTH='temibiyi_auth_v2';
+let db=JSON.parse(localStorage.getItem(KEY)||'{"sales":[],"products":[],"expenses":[]}');
+let auth=JSON.parse(localStorage.getItem(AUTH)||'{"pin":"1234"}'); let user=null;
+const money=n=>'₦'+Number(n||0).toLocaleString('en-NG',{minimumFractionDigits:2,maximumFractionDigits:2});
+const save=()=>{localStorage.setItem(KEY,JSON.stringify(db));render()}; const now=()=>new Date().toISOString(); const dateTxt=x=>new Date(x).toLocaleString('en-NG');
+function login(e){e.preventDefault();if(loginPin.value!==auth.pin){alert('Incorrect PIN. Default PIN is 1234.');return}user={name:loginName.value.trim(),role:loginRole.value};localStorage.setItem('temibiyi_user',JSON.stringify(user));openApp()}
+function openApp(){document.getElementById('login').style.display='none';document.getElementById('app').style.display='block';user=JSON.parse(localStorage.getItem('temibiyi_user')||'null');userBadge.textContent=(user?.name||'User')+' • '+(user?.role||'Admin');render()}
+function logout(){localStorage.removeItem('temibiyi_user');location.reload()}
+if(localStorage.getItem('temibiyi_user'))openApp();
+function show(id,btn){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));btn.classList.add('active');render()}
+function addSale(e){e.preventDefault();let p=saleProduct.value.trim(),q=+saleQty.value||1,price=+salePrice.value||0;db.sales.unshift({id:Date.now(),date:now(),product:p,qty:q,total:q*price,payment:salePayment.value,cashier:user?.name||'User'});let item=db.products.find(x=>x.name.toLowerCase()===p.toLowerCase());if(item)item.stock=Math.max(0,item.stock-q);e.target.reset();saleQty.value=1;save()}
+function quickSale(e){e.preventDefault();let p=qsProduct.value.trim();db.sales.unshift({id:Date.now(),date:now(),product:p,qty:1,total:+qsAmount.value||0,payment:'Cash',cashier:user?.name||'User'});let item=db.products.find(x=>x.name.toLowerCase()===p.toLowerCase());if(item)item.stock=Math.max(0,item.stock-1);e.target.reset();save()}
+function addProduct(e){e.preventDefault();db.products.push({id:Date.now(),name:prodName.value.trim(),stock:+prodStock.value||0,buy:+prodBuy.value||0,sell:+prodSell.value||0});e.target.reset();save()}
+function addExpense(e){e.preventDefault();db.expenses.unshift({id:Date.now(),date:now(),desc:expDesc.value.trim(),amount:+expAmount.value||0});e.target.reset();save()}
+function editProduct(id){let x=db.products.find(p=>p.id===id);if(!x)return;editId.value=x.id;editName.value=x.name;editStock.value=x.stock;editBuy.value=x.buy;editSell.value=x.sell;editModal.classList.add('show')}
+function saveEdit(e){e.preventDefault();let x=db.products.find(p=>p.id==editId.value);if(x){x.name=editName.value.trim();x.stock=+editStock.value||0;x.buy=+editBuy.value||0;x.sell=+editSell.value||0;save();closeEdit()}}
+function closeEdit(){editModal.classList.remove('show')}
+function del(type,id){if(confirm('Delete this record?')){db[type]=db[type].filter(x=>x.id!==id);save()}}
+function changePin(e){e.preventDefault();auth.pin=newPin.value;localStorage.setItem(AUTH,JSON.stringify(auth));newPin.value='';alert('PIN changed successfully.')}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function render(){
+let total=db.sales.reduce((a,x)=>a+x.total,0),expenses=db.expenses.reduce((a,x)=>a+x.amount,0),today=new Date().toLocaleDateString('en-NG');let td=db.sales.filter(x=>new Date(x.date).toLocaleDateString('en-NG')===today).reduce((a,x)=>a+x.total,0);
+if(!document.getElementById('app')||document.getElementById('app').style.display==='none')return;todaySales.textContent=money(td);totalSales.textContent=money(total);totalExpenses.textContent=money(expenses);productCount.textContent=db.products.length;
+let opts=db.products.map(x=>'<option value="'+esc(x.name)+'">').join('');productList.innerHTML=opts;productList2.innerHTML=opts;
+salesBody.innerHTML=db.sales.length?db.sales.map(x=>`<tr><td>${dateTxt(x.date)}</td><td>${esc(x.product)}</td><td>${x.qty}</td><td>${money(x.total)}</td><td>${x.payment}</td><td>${esc(x.cashier||'')}</td><td><button class="btn danger small" onclick="del('sales',${x.id})">Delete</button></td></tr>`).join(''):'<tr><td colspan="7" class="empty">No sales yet</td></tr>';
+productsBody.innerHTML=db.products.length?db.products.map(x=>`<tr><td><b>${esc(x.name)}</b></td><td>${x.stock}</td><td>${money(x.buy)}</td><td>${money(x.sell)}</td><td>${money(x.stock*x.sell)}</td><td><div class="actions"><button class="btn small" onclick="editProduct(${x.id})">Edit</button><button class="btn danger small" onclick="del('products',${x.id})">Delete</button></div></td></tr>`).join(''):'<tr><td colspan="6" class="empty">No stock added yet</td></tr>';
+expensesBody.innerHTML=db.expenses.length?db.expenses.map(x=>`<tr><td>${dateTxt(x.date)}</td><td>${esc(x.desc)}</td><td>${money(x.amount)}</td><td><button class="btn danger small" onclick="del('expenses',${x.id})">Delete</button></td></tr>`).join(''):'<tr><td colspan="4" class="empty">No expenses yet</td></tr>';
+let profit=total-expenses;reportText.innerHTML=`<p><b>Total sales:</b> ${money(total)}</p><p><b>Total expenses:</b> ${money(expenses)}</p><p><b>Estimated cash balance:</b> ${money(profit)}</p><p><b>Transactions:</b> ${db.sales.length}</p><p><b>Stock units:</b> ${db.products.reduce((a,x)=>a+x.stock,0)}</p>`;
 }
-function showReceipt(s){receiptContent.innerHTML=`<div class="receipt"><h3>TEMIBIYI HERBS</h3><div style="text-align:center">Nature • Healing • Wellness<br>08086689511 / 09029424609</div><div class="line"></div>Date: ${s.date} ${s.time}<br>Customer: ${s.customer||'Walk-in'}<br>Payment: ${s.payment}<div class="line"></div>${s.product}<br>${s.qty} × ${naira(s.price)} <span style="float:right">${naira(s.total)}</span><div class="line"></div><b>TOTAL: ${naira(s.total)}</b><div class="line"></div><div style="text-align:center">Thank you for your patronage.</div></div>`;receiptModal.classList.add('show')}
-function closeReceipt(){receiptModal.classList.remove('show')}
-function printReceipt(){let w=window.open('','_blank');w.document.write('<html><head><title>Receipt</title></head><body>'+receiptContent.innerHTML+'</body></html>');w.document.close();w.print()}
-function del(type,id){if(!confirm('Delete this record?'))return;db[type]=db[type].filter(x=>x.id!=id);save()}
-function renderProducts(){productsTable.innerHTML=db.products.length?`<table><tr><th>Product</th><th>Buy</th><th>Sell</th><th>Stock</th><th>Status</th><th></th></tr>${db.products.map(p=>`<tr><td>${esc(p.name)}</td><td>${naira(p.buy)}</td><td>${naira(p.sell)}</td><td>${p.stock}</td><td class="${p.stock<=p.alert?'low':'ok'}">${p.stock<=p.alert?'LOW':'OK'}</td><td><button class="danger" onclick="del('products',${p.id})">Delete</button></td></tr>`).join('')}</table>`:'<div class="empty">No products yet.</div>'}
-function renderSales(){salesTable.innerHTML=db.sales.length?`<table><tr><th>Date</th><th>Product</th><th>Qty</th><th>Total</th><th>Payment</th></tr>${db.sales.slice(0,100).map(s=>`<tr><td>${s.date}</td><td>${esc(s.product)}</td><td>${s.qty}</td><td>${naira(s.total)}</td><td>${s.payment}</td></tr>`).join('')}</table>`:'<div class="empty">No sales yet.</div>'}
-function renderExpenses(){expensesTable.innerHTML=db.expenses.length?`<table><tr><th>Date</th><th>Description</th><th>Amount</th><th></th></tr>${db.expenses.slice().reverse().map(e=>`<tr><td>${e.date}</td><td>${esc(e.desc)}</td><td>${naira(e.amount)}</td><td><button class="danger" onclick="del('expenses',${e.id})">Delete</button></td></tr>`).join('')}</table>`:'<div class="empty">No expenses yet.</div>'}
-function renderCustomers(){customersTable.innerHTML=db.customers.length?`<table><tr><th>Name</th><th>Phone</th><th></th></tr>${db.customers.map(c=>`<tr><td>${esc(c.name)}</td><td>${esc(c.phone)}</td><td><button class="danger" onclick="del('customers',${c.id})">Delete</button></td></tr>`).join('')}</table>`:'<div class="empty">No customers yet.</div>'}
-function renderDashboard(){
- let ts=db.sales.filter(s=>s.date===today()),te=db.expenses.filter(e=>e.date===today()),sales=ts.reduce((a,s)=>a+s.total,0),profit=ts.reduce((a,s)=>a+(s.price-s.buy)*s.qty,0),exp=te.reduce((a,e)=>a+e.amount,0);
- todaySales.textContent=naira(sales);todayProfit.textContent=naira(profit-exp);todayExpenses.textContent=naira(exp);stockCount.textContent=db.products.reduce((a,p)=>a+p.stock,0);
- let low=db.products.filter(p=>p.stock<=p.alert);lowStock.innerHTML=low.length?`<table><tr><th>Product</th><th>Stock</th></tr>${low.map(p=>`<tr><td>${esc(p.name)}</td><td class="low">${p.stock}</td></tr>`).join('')}</table>`:'<div class="empty">All products are above their alert level.</div>';
- recentSales.innerHTML=db.sales.length?`<table><tr><th>Date</th><th>Product</th><th>Total</th></tr>${db.sales.slice(0,5).map(s=>`<tr><td>${s.date}</td><td>${esc(s.product)}</td><td>${naira(s.total)}</td></tr>`).join('')}</table>`:'<div class="empty">No sales recorded yet.</div>'
-}
-function renderSaleProducts(){saleProduct.innerHTML=db.products.length?db.products.map(p=>`<option value="${p.id}">${esc(p.name)} — ${naira(p.sell)} (${p.stock} in stock)</option>`).join(''):'<option value="">Add products first</option>';updateSalePrice()}
-function renderAll(){renderDashboard();renderProducts();renderSales();renderExpenses();renderCustomers();renderSaleProducts()}
-function runReport(){
- let f=fromDate.value||'0000-01-01',t=toDate.value||'9999-12-31',ss=db.sales.filter(s=>s.date>=f&&s.date<=t),ee=db.expenses.filter(e=>e.date>=f&&e.date<=t);
- let revenue=ss.reduce((a,s)=>a+s.total,0),cost=ss.reduce((a,s)=>a+s.buy*s.qty,0),ex=ee.reduce((a,e)=>a+e.amount,0);
- reportResult.innerHTML=`<h2>Report: ${f} to ${t}</h2><div class="cards"><div class="card"><div class="label">Sales</div><div class="value">${naira(revenue)}</div></div><div class="card"><div class="label">Cost of Goods</div><div class="value">${naira(cost)}</div></div><div class="card"><div class="label">Expenses</div><div class="value">${naira(ex)}</div></div><div class="card"><div class="label">Estimated Net Profit</div><div class="value">${naira(revenue-cost-ex)}</div></div></div><div class="panel"><h2>Sales in Period</h2>${ss.length?`<table><tr><th>Date</th><th>Product</th><th>Qty</th><th>Total</th></tr>${ss.map(s=>`<tr><td>${s.date}</td><td>${esc(s.product)}</td><td>${s.qty}</td><td>${naira(s.total)}</td></tr>`).join('')}</table>`:'<div class="empty">No sales in this period.</div>'}</div>`
-}
-function exportData(){let blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='temibiyi-herbs-backup.json';a.click()}
-function printReport(){let w=window.open('','_blank');w.document.write('<html><head><title>Temibiyi Herbs Report</title></head><body>'+reportResult.innerHTML+'</body></html>');w.document.close();w.print()}
-function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
-fromDate.value=today();toDate.value=today();renderAll();
-
-function installHelp(){
- alert("On your iPad: open this app in Safari, tap Share, choose 'Add to Home Screen', then tap Add. The Temibiyi Herbs icon will appear like an app.");
-}
-function importData(ev){
- const file=ev.target.files[0]; if(!file) return;
- const r=new FileReader();
- r.onload=()=>{try{
-   const x=JSON.parse(r.result);
-   if(!x.products||!x.sales||!x.expenses||!x.customers) throw new Error();
-   db=x; save(); toast("Backup restored");
- }catch(e){alert("Invalid Temibiyi Herbs backup file.");}};
- r.readAsText(file);
-}
-if('serviceWorker' in navigator){ window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{})); }
-
-</script>
-</body></html>
+function exportCSV(){let rows=[['Date','Product','Quantity','Total','Payment','Cashier'],...db.sales.map(x=>[dateTxt(x.date),x.product,x.qty,x.total,x.payment,x.cashier||''])];let csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='temibiyi-herbs-sales.csv';a.click()}
+function backup(){let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:'application/json'}));a.download='temibiyi-herbs-backup.json';a.click()}
+function restore(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);if(x.sales&&x.products&&x.expenses){db=x;save();alert('Backup restored successfully.')}else throw 0}catch(_){alert('Invalid backup file.')}};r.readAsText(f)}
+</script></body></html>
