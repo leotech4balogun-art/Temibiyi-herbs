@@ -152,6 +152,7 @@ footer{text-align:center;color:#78867d;font-size:12px;padding:20px}
     <div id="myQR" class="qrbox"></div>
     <div class="muted" id="qrText" style="text-align:center"></div>
   </div>
+  <div class="panel"><h2>Cloud Connection</h2><p class="muted">Connect this app to your Temibiyi Herbs cloud database. Use the Supabase Project URL and anon/publishable key from your project.</p><form onsubmit="saveCloud(event)"><input id="sbUrl" placeholder="Supabase Project URL (https://...supabase.co)"><input id="sbKey" placeholder="Supabase anon/publishable key"><button class="btn secondary">Save & Test Connection</button></form><p id="cloudStatus" class="muted"></p></div>
   <div class="panel"><button class="btn danger" onclick="logout()">Sign out</button></div>
 </section>
 </main>
@@ -166,10 +167,19 @@ footer{text-align:center;color:#78867d;font-size:12px;padding:20px}
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <script>
 const DBKEY='temibiyi_customer_app_v1';
+const SBKEY='temibiyi_supabase_config_v1';
+let cloud=null;
+function getCloudConfig(){try{return JSON.parse(localStorage.getItem(SBKEY)||'null')}catch(e){return null}}
+function initCloud(){let c=getCloudConfig(); if(window.supabase&&c?.url&&c?.key){try{cloud=window.supabase.createClient(c.url,c.key)}catch(e){cloud=null}}; if(document.getElementById('sbUrl')){sbUrl.value=c?.url||'';sbKey.value=c?.key||'';cloudStatus.textContent=cloud?'Cloud configured.':'Cloud not configured.'}}
+async function saveCloud(e){e.preventDefault();localStorage.setItem(SBKEY,JSON.stringify({url:sbUrl.value.trim(),key:sbKey.value.trim()}));initCloud();if(!cloud){cloudStatus.textContent='Could not initialize cloud connection.';return}try{let {error}=await cloud.rpc('customer_ping');cloudStatus.textContent=error?'Connected, but database setup is incomplete. Run the supplied SQL schema.':'Connected successfully ✓';await syncCustomer()}catch(err){cloudStatus.textContent='Connection saved. Run the supplied SQL schema, then test again.'}}
+async function syncCustomer(){if(!cloud||!customer?.phone)return;let token=customer.token||crypto.randomUUID()+crypto.randomUUID();customer.token=token;localStorage.setItem('temibiyi_customer',JSON.stringify(customer));try{await cloud.rpc('customer_upsert',{p_token:customer.token,p_name:customer.name,p_phone:customer.phone});let {data}=await cloud.rpc('customer_orders',{p_token:customer.token});if(Array.isArray(data)){db.orders=data.map(o=>({id:o.id,date:o.created_at,customer:{name:o.customer_name,phone:o.customer_phone},items:o.items||[],total:o.total,address:o.address,method:o.delivery_method,note:o.note,status:o.status,payment:o.payment_status}));localStorage.setItem(DBKEY,JSON.stringify(db));render()}}catch(e){console.log(e)}}
+async function cloudInsertOrder(order){if(!cloud||!customer?.token)return false;try{let {data,error}=await cloud.rpc('customer_create_order',{p_token:customer.token,p_order_id:order.id,p_address:order.address,p_method:order.method,p_note:order.note,p_total:order.total,p_items:JSON.stringify(order.items)});return !error}catch(e){return false}}
+async function cloudInsertRequest(r){if(!cloud||!customer?.token)return false;try{let {error}=await cloud.rpc('customer_create_request',{p_token:customer.token,p_request_id:r.id,p_type:r.type,p_subject:r.subject,p_message:r.message,p_preferred:r.preferred});return !error}catch(e){return false}}
 const defaultProducts=[
   {id:'p1',name:'Herbal Product 1',price:0,description:'Replace with your actual product name and price.'},
   {id:'p2',name:'Herbal Product 2',price:0,description:'Replace with your actual product name and price.'},
@@ -182,8 +192,8 @@ let scanner=null;
 const money=n=>'₦'+Number(n||0).toLocaleString('en-NG',{minimumFractionDigits:2,maximumFractionDigits:2});
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 function save(){localStorage.setItem(DBKEY,JSON.stringify(db));render()}
-function enterCustomer(e){e.preventDefault();customer={name:customerName.value.trim(),phone:customerPhone.value.trim()};localStorage.setItem('temibiyi_customer',JSON.stringify(customer));openApp()}
-function openApp(){document.getElementById('login').style.display='none';document.getElementById('app').style.display='block';customer=JSON.parse(localStorage.getItem('temibiyi_customer')||'null');if(!customer)return;customerBadge.textContent=customer.name;welcomeName.textContent=customer.name.split(' ')[0];accountName.textContent=customer.name;accountPhone.textContent=customer.phone;render()}
+function enterCustomer(e){e.preventDefault();customer={name:customerName.value.trim(),phone:customerPhone.value.trim(),token:crypto.randomUUID()+crypto.randomUUID()};localStorage.setItem('temibiyi_customer',JSON.stringify(customer));openApp()}
+function openApp(){document.getElementById('login').style.display='none';document.getElementById('app').style.display='block';customer=JSON.parse(localStorage.getItem('temibiyi_customer')||'null');if(!customer)return;initCloud();syncCustomer();customerBadge.textContent=customer.name;welcomeName.textContent=customer.name.split(' ')[0];accountName.textContent=customer.name;accountPhone.textContent=customer.phone;render()}
 function logout(){localStorage.removeItem('temibiyi_customer');location.reload()}
 if(customer)openApp();
 
@@ -196,8 +206,8 @@ function changeQty(id,d){db.cart[id]=(db.cart[id]||0)+d;if(db.cart[id]<=0)delete
 function placeOrder(e){e.preventDefault();if(Object.keys(db.cart).length===0){alert('Your cart is empty.');return}
 let items=Object.entries(db.cart).map(([id,qty])=>{let p=products().find(x=>x.id===id);return {id,name:p.name,qty,price:Number(p.price)}})
 let order={id:'TH-'+Date.now().toString().slice(-7),date:new Date().toISOString(),customer:{...customer},items,total:cartTotal(),address:deliveryAddress.value.trim(),method:deliveryMethod.value,note:orderNote.value.trim(),status:'Order received',payment:'Pending'};
-db.orders.unshift(order);db.cart={};e.target.reset();save();alert('Order request submitted: '+order.id);showById('orders')}
-function submitRequest(e){e.preventDefault();let r={id:'REQ-'+Date.now().toString().slice(-7),date:new Date().toISOString(),customer:{...customer},type:requestType.value,subject:requestSubject.value.trim(),message:requestMessage.value.trim(),preferred:requestPreferred.value.trim(),status:'Received'};db.requests.unshift(r);e.target.reset();save();alert('Your request has been sent: '+r.id)}
+db.orders.unshift(order);db.cart={};cloudInsertOrder(order).then(ok=>{if(ok)syncCustomer()});e.target.reset();save();alert('Order request submitted: '+order.id);showById('orders')}
+function submitRequest(e){e.preventDefault();let r={id:'REQ-'+Date.now().toString().slice(-7),date:new Date().toISOString(),customer:{...customer},type:requestType.value,subject:requestSubject.value.trim(),message:requestMessage.value.trim(),preferred:requestPreferred.value.trim(),status:'Received'};db.requests.unshift(r);e.target.reset();save();cloudInsertRequest(r).then(ok=>{if(ok)syncCustomer()});alert('Your request has been sent: '+r.id)}
 function payOrder(id){let o=db.orders.find(x=>x.id===id);if(!o)return;alert('Payment gateway connection is the next production step. The order is '+o.payment+'. Add your Paystack/Flutterwave public key or payment link to enable live payment.');}
 function orderCard(o){return `<div class="order"><div style="display:flex;justify-content:space-between;gap:8px"><strong>${esc(o.id)}</strong><span class="badge">${esc(o.status)}</span></div><p class="muted">${new Date(o.date).toLocaleString('en-NG')}</p><p>${o.items.map(i=>`${i.qty} × ${esc(i.name)}`).join('<br>')}</p><p><b>Total:</b> ${money(o.total)}</p><p class="muted">${esc(o.method)} • ${esc(o.address)}</p><div class="actions">${o.payment==='Paid'?'<span class="badge">✓ Paid</span>':`<button class="btn" onclick="payOrder('${o.id}')">💳 Pay Now</button>`}</div><div style="margin-top:10px">${statusHTML(o)}</div></div>`}
 function statusHTML(o){let stages=['Order received','Confirmed','Preparing','Ready for delivery','Delivered'];return stages.map(s=>`<div class="status ${stages.indexOf(s)<=stages.indexOf(o.status)?'done':''}"><span class="dot"></span><span>${s}</span></div>`).join('')}
@@ -211,7 +221,7 @@ homeOrders.innerHTML=mine.slice(0,2).length?mine.slice(0,2).map(orderCard).join(
 }
 function generateQR(){
 if(!customer)return;
-myQR.innerHTML='';let data=location.href.split('#')[0]+'#login='+encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(customer)))));
+myQR.innerHTML='';let data=location.href.split('#')[0]+'#login='+encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify({name:customer.name,phone:customer.phone,token:customer.token}))))) ;
 new QRCode(document.getElementById('myQR'),{text:data,width:220,height:220});
 qrText.textContent='Scan this QR on another device to open the customer app.';
 }
@@ -229,7 +239,7 @@ try{
 }
 function closeQRScanner(){document.getElementById('qrModal').classList.remove('show');if(scanner){scanner.stop().catch(()=>{});scanner.clear();scanner=null}}
 window.addEventListener('hashchange',()=>{
-let h=location.hash;if(h.startsWith('#login=')){try{let c=JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(h.slice(7))))));if(c.name&&c.phone){customer=c;localStorage.setItem('temibiyi_customer',JSON.stringify(customer));history.replaceState(null,'',location.pathname+location.search);openApp()}}catch(e){}}
+let h=location.hash;if(h.startsWith('#login=')){try{let c=JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(h.slice(7))))));if(c.name&&c.phone){customer=c;customer.token=customer.token||crypto.randomUUID()+crypto.randomUUID();localStorage.setItem('temibiyi_customer',JSON.stringify(customer));history.replaceState(null,'',location.pathname+location.search);openApp()}}catch(e){}}
 });
 if(location.hash.startsWith('#login='))setTimeout(()=>window.dispatchEvent(new Event('hashchange')),100);
 </script>
