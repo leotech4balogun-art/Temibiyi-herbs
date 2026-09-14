@@ -1,1 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#1f7a4d">
+<title>Temibiyi Herbs — Customer</title>
+<style>
+:root{--g:#1f7a4d;--g2:#eaf5ee;--ink:#173b2a;--bg:#f5f8f6;--line:#dbe7df;--gold:#a97913;--red:#b33a3a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+header{background:var(--g);color:#fff;padding:18px 16px;position:sticky;top:0;z-index:20;box-shadow:0 2px 8px #0001}
+header h1{margin:0;font-size:22px}header p{margin:4px 0 0;font-size:12px;opacity:.9}
+main{max-width:900px;margin:auto;padding:15px 15px 90px}.page{display:none}.page.active{display:block}
+nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);z-index:30;display:grid;grid-template-columns:repeat(5,1fr);padding:7px 5px calc(7px + env(safe-area-inset-bottom))}
+nav button{border:0;background:transparent;color:#66736b;padding:7px 2px;border-radius:10px;font-size:11px;font-weight:700}nav button.active{background:var(--g2);color:var(--g)}
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.card,.panel{background:#fff;border:1px solid var(--line);border-radius:15px}
+.card{padding:14px}.card h3{margin:0 0 6px;font-size:15px}.card p{margin:0;font-size:12px;color:#6d7d73}
+.panel{padding:15px;margin-top:14px}.hero{background:linear-gradient(135deg,#1f7a4d,#2e8e5d);color:#fff;border:0}.hero h2{font-size:22px}.hero p{color:#e9fff0}
+h2{font-size:18px;margin:0 0 12px}h3{margin:0 0 8px}.muted{color:#718078;font-size:13px}
+form{display:grid;gap:10px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+input,select,textarea{width:100%;padding:12px;border:1px solid #cbd9d0;border-radius:10px;background:#fff;font:inherit}textarea{min-height:100px;resize:vertical}
+.btn{border:0;border-radius:10px;padding:12px 14px;font-weight:800;background:var(--g);color:#fff;cursor:pointer}.btn.secondary{background:var(--g2);color:var(--ink)}.btn.gold{background:#f5ead0;color:#684b0d}.btn.danger{background:var(--red)}
+.actions{display:flex;gap:8px;flex-wrap:wrap}.product{padding:13px;border:1px solid var(--line);border-radius:13px;margin-bottom:9px;display:flex;justify-content:space-between;gap:10px;align-items:center}.product h3{font-size:15px;margin-bottom:4px}.price{font-weight:900}.qty{display:flex;align-items:center;gap:8px}.qty button{width:32px;height:32px;border:0;border-radius:9px;background:var(--g2);font-size:18px}
+.badge{display:inline-block;padding:5px 8px;border-radius:999px;background:var(--g2);color:var(--g);font-size:11px;font-weight:800}.order{border:1px solid var(--line);border-radius:13px;padding:13px;margin-bottom:10px}.order strong{font-size:14px}.total{font-size:20px;font-weight:900}
+.notice{background:#eef8f1;border-left:4px solid var(--g);padding:12px;border-radius:8px;font-size:13px}.warning{background:#fff8e8;border-left-color:#c58a18}
+.modal{display:none;position:fixed;inset:0;background:#0008;z-index:50;align-items:center;justify-content:center;padding:18px}.modal.show{display:flex}.modalbox{background:#fff;width:min(520px,100%);border-radius:17px;padding:18px;max-height:90vh;overflow:auto}
+.modalhead{display:flex;justify-content:space-between;align-items:center}.close{border:0;background:#eee;border-radius:9px;padding:8px}
+.login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}.loginbox{width:min(440px,100%);background:#fff;border:1px solid var(--line);border-radius:20px;padding:24px}.logo{font-size:42px}
+.qrbox{display:flex;justify-content:center;padding:10px}.qrbox canvas,.qrbox img{max-width:240px}
+.status{display:flex;gap:9px;align-items:center;margin:9px 0}.dot{width:11px;height:11px;border-radius:50%;background:#cfd8d2}.done .dot{background:var(--g)}
+.empty{text-align:center;color:#748178;padding:20px}
+footer{text-align:center;color:#78867d;font-size:12px;padding:20px}
+@media(min-width:700px){.cards{grid-template-columns:repeat(4,1fr)}nav{position:sticky;top:76px;bottom:auto;border-top:0;border-bottom:1px solid var(--line);display:flex;justify-content:center;gap:10px;padding:8px;background:#fff}nav button{font-size:12px;padding:10px 16px}main{padding-bottom:25px}}
+</style>
+</head>
+<body>
 
+<div id="login" class="login">
+  <div class="loginbox">
+    <div class="logo">🌿</div>
+    <h1 style="margin:0">Temibiyi Herbs</h1>
+    <p class="muted">Customer Order & Consultation</p>
+    <div class="panel" style="margin-top:16px">
+      <form onsubmit="enterCustomer(event)">
+        <input id="customerName" placeholder="Your full name" required>
+        <input id="customerPhone" placeholder="Phone / WhatsApp number" required>
+        <button class="btn">Continue</button>
+      </form>
+      <div class="actions" style="margin-top:10px">
+        <button class="btn secondary" onclick="openQRScanner()">📷 Scan QR to Login</button>
+      </div>
+      <p class="muted" style="margin-top:12px">You can use the QR option when Temibiyi Herbs gives you a customer login QR code.</p>
+    </div>
+  </div>
+</div>
+
+<div id="app" style="display:none">
+<header>
+  <div style="display:flex;justify-content:space-between;gap:10px;align-items:center">
+    <div><h1>🌿 Temibiyi Herbs</h1><p>Customer Order & Consultation</p></div>
+    <span class="badge" style="background:#ffffff22;color:#fff" id="customerBadge"></span>
+  </div>
+</header>
+
+<nav>
+  <button class="active" onclick="show('home',this)">Home</button>
+  <button onclick="show('shop',this)">Shop</button>
+  <button onclick="show('orders',this)">Orders</button>
+  <button onclick="show('consult',this)">Consult</button>
+  <button onclick="show('account',this)">Account</button>
+</nav>
+
+<main>
+<section id="home" class="page active">
+  <div class="panel hero">
+    <h2>Welcome, <span id="welcomeName"></span> 👋</h2>
+    <p>Order your herbal products, request something special, ask for a consultation, and pay securely.</p>
+    <div class="actions">
+      <button class="btn secondary" onclick="showById('shop')">🛒 Start an Order</button>
+      <button class="btn gold" onclick="showById('consult')">💬 Ask for Consultation</button>
+    </div>
+  </div>
+  <div class="cards">
+    <div class="card"><h3>🛒 Order</h3><p>Browse products and submit your order.</p></div>
+    <div class="card"><h3>📝 Request</h3><p>Ask for products not listed in the shop.</p></div>
+    <div class="card"><h3>💬 Consultation</h3><p>Send a consultation request.</p></div>
+    <div class="card"><h3>💳 Payment</h3><p>Pay after your order is confirmed.</p></div>
+  </div>
+  <div class="panel">
+    <h2>Your latest orders</h2><div id="homeOrders"></div>
+  </div>
+</section>
+
+<section id="shop" class="page">
+  <div class="panel"><h2>Shop</h2><p class="muted">Select the products you want. Product names/prices can be edited in the product list inside this file until a shared database is connected.</p><div id="productList"></div></div>
+  <div class="panel"><h2>Your cart</h2><div id="cart"></div></div>
+  <div class="panel">
+    <h2>Delivery details</h2>
+    <form onsubmit="placeOrder(event)">
+      <input id="deliveryAddress" placeholder="Delivery address" required>
+      <select id="deliveryMethod"><option>Delivery</option><option>Pickup</option></select>
+      <textarea id="orderNote" placeholder="Order note (optional)"></textarea>
+      <div class="total">Total: <span id="cartTotal">₦0.00</span></div>
+      <button class="btn">Place Order Request</button>
+    </form>
+  </div>
+  <div class="panel">
+    <h2>Need something not listed?</h2>
+    <p class="muted">Send a custom request with the product, quantity, or photo details.</p>
+    <button class="btn secondary" onclick="showById('consult');document.getElementById('requestType').value='Product Request'">📝 Make a Request</button>
+  </div>
+</section>
+
+<section id="orders" class="page">
+  <div class="panel"><h2>My Orders</h2><div id="ordersList"></div></div>
+</section>
+
+<section id="consult" class="page">
+  <div class="panel">
+    <h2>Request help</h2>
+    <form onsubmit="submitRequest(event)">
+      <select id="requestType"><option>Consultation</option><option>Product Request</option><option>General Question</option></select>
+      <input id="requestSubject" placeholder="Subject" required>
+      <textarea id="requestMessage" placeholder="Tell us what you need..." required></textarea>
+      <input id="requestPreferred" placeholder="Preferred date/time (optional)">
+      <button class="btn">Send Request</button>
+    </form>
+  </div>
+  <div class="panel">
+    <h2>Quick contact</h2>
+    <div class="notice">For urgent assistance you can contact Temibiyi Herbs by WhatsApp or phone.</div>
+    <div class="actions" style="margin-top:10px">
+      <a class="btn secondary" href="https://wa.me/2348086689511" target="_blank" style="text-decoration:none">WhatsApp</a>
+      <a class="btn secondary" href="tel:+2348086689511" style="text-decoration:none">Call</a>
+    </div>
+  </div>
+</section>
+
+<section id="account" class="page">
+  <div class="panel"><h2>My Account</h2><p><b>Name:</b> <span id="accountName"></span></p><p><b>Phone:</b> <span id="accountPhone"></span></p></div>
+  <div class="panel">
+    <h2>Payment</h2>
+    <div class="notice warning"><b>Secure payment:</b> this customer app is prepared for Paystack/Flutterwave integration. A real payment gateway secret must be kept on a secure server, not inside GitHub Pages.</div>
+    <p class="muted">For now, each confirmed order can be marked ready for payment and connected to your official payment link/gateway.</p>
+  </div>
+  <div class="panel">
+    <h2>QR Login</h2>
+    <p class="muted">Generate a QR code for this customer. Scanning it on another device opens this app with the customer's login details encoded in the link.</p>
+    <button class="btn" onclick="generateQR()">Generate My Login QR</button>
+    <div id="myQR" class="qrbox"></div>
+    <div class="muted" id="qrText" style="text-align:center"></div>
+  </div>
+  <div class="panel"><button class="btn danger" onclick="logout()">Sign out</button></div>
+</section>
+</main>
+<footer>Temibiyi Herbs • Customer App</footer>
+</div>
+
+<div id="qrModal" class="modal">
+  <div class="modalbox">
+    <div class="modalhead"><h2>📷 Scan Customer QR</h2><button class="close" onclick="closeQRScanner()">✕</button></div>
+    <div id="reader" style="width:100%"></div>
+    <p class="muted">Point the camera at a Temibiyi Herbs customer login QR code.</p>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script>
+const DBKEY='temibiyi_customer_app_v1';
+const defaultProducts=[
+  {id:'p1',name:'Herbal Product 1',price:0,description:'Replace with your actual product name and price.'},
+  {id:'p2',name:'Herbal Product 2',price:0,description:'Replace with your actual product name and price.'},
+  {id:'p3',name:'Herbal Product 3',price:0,description:'Replace with your actual product name and price.'}
+];
+let db=JSON.parse(localStorage.getItem(DBKEY)||'{"orders":[],"requests":[],"cart":{}}');
+let customer=JSON.parse(localStorage.getItem('temibiyi_customer')||'null');
+let scanner=null;
+
+const money=n=>'₦'+Number(n||0).toLocaleString('en-NG',{minimumFractionDigits:2,maximumFractionDigits:2});
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+function save(){localStorage.setItem(DBKEY,JSON.stringify(db));render()}
+function enterCustomer(e){e.preventDefault();customer={name:customerName.value.trim(),phone:customerPhone.value.trim()};localStorage.setItem('temibiyi_customer',JSON.stringify(customer));openApp()}
+function openApp(){document.getElementById('login').style.display='none';document.getElementById('app').style.display='block';customer=JSON.parse(localStorage.getItem('temibiyi_customer')||'null');if(!customer)return;customerBadge.textContent=customer.name;welcomeName.textContent=customer.name.split(' ')[0];accountName.textContent=customer.name;accountPhone.textContent=customer.phone;render()}
+function logout(){localStorage.removeItem('temibiyi_customer');location.reload()}
+if(customer)openApp();
+
+function show(id,btn){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');render()}
+function showById(id){show(id,[...document.querySelectorAll('nav button')].find(b=>b.textContent.toLowerCase().includes(id==='consult'?'consult':id)))}
+function products(){return JSON.parse(localStorage.getItem('temibiyi_customer_products')||'null')||defaultProducts}
+function cartTotal(){return Object.entries(db.cart).reduce((sum,[id,q])=>{let p=products().find(x=>x.id===id);return sum+(p?Number(p.price)*q:0)},0)}
+function addToCart(id){db.cart[id]=(db.cart[id]||0)+1;save()}
+function changeQty(id,d){db.cart[id]=(db.cart[id]||0)+d;if(db.cart[id]<=0)delete db.cart[id];save()}
+function placeOrder(e){e.preventDefault();if(Object.keys(db.cart).length===0){alert('Your cart is empty.');return}
+let items=Object.entries(db.cart).map(([id,qty])=>{let p=products().find(x=>x.id===id);return {id,name:p.name,qty,price:Number(p.price)}})
+let order={id:'TH-'+Date.now().toString().slice(-7),date:new Date().toISOString(),customer:{...customer},items,total:cartTotal(),address:deliveryAddress.value.trim(),method:deliveryMethod.value,note:orderNote.value.trim(),status:'Order received',payment:'Pending'};
+db.orders.unshift(order);db.cart={};e.target.reset();save();alert('Order request submitted: '+order.id);showById('orders')}
+function submitRequest(e){e.preventDefault();let r={id:'REQ-'+Date.now().toString().slice(-7),date:new Date().toISOString(),customer:{...customer},type:requestType.value,subject:requestSubject.value.trim(),message:requestMessage.value.trim(),preferred:requestPreferred.value.trim(),status:'Received'};db.requests.unshift(r);e.target.reset();save();alert('Your request has been sent: '+r.id)}
+function payOrder(id){let o=db.orders.find(x=>x.id===id);if(!o)return;alert('Payment gateway connection is the next production step. The order is '+o.payment+'. Add your Paystack/Flutterwave public key or payment link to enable live payment.');}
+function orderCard(o){return `<div class="order"><div style="display:flex;justify-content:space-between;gap:8px"><strong>${esc(o.id)}</strong><span class="badge">${esc(o.status)}</span></div><p class="muted">${new Date(o.date).toLocaleString('en-NG')}</p><p>${o.items.map(i=>`${i.qty} × ${esc(i.name)}`).join('<br>')}</p><p><b>Total:</b> ${money(o.total)}</p><p class="muted">${esc(o.method)} • ${esc(o.address)}</p><div class="actions">${o.payment==='Paid'?'<span class="badge">✓ Paid</span>':`<button class="btn" onclick="payOrder('${o.id}')">💳 Pay Now</button>`}</div><div style="margin-top:10px">${statusHTML(o)}</div></div>`}
+function statusHTML(o){let stages=['Order received','Confirmed','Preparing','Ready for delivery','Delivered'];return stages.map(s=>`<div class="status ${stages.indexOf(s)<=stages.indexOf(o.status)?'done':''}"><span class="dot"></span><span>${s}</span></div>`).join('')}
+function render(){
+if(!customer||document.getElementById('app').style.display==='none')return;
+let ps=products();productList.innerHTML=ps.map(p=>`<div class="product"><div><h3>${esc(p.name)}</h3><div class="muted">${esc(p.description||'')}</div><div class="price">${Number(p.price)>0?money(p.price):'Price to be confirmed'}</div></div><button class="btn" onclick="addToCart('${p.id}')">Add</button></div>`).join('');
+let entries=Object.entries(db.cart);cart.innerHTML=entries.length?entries.map(([id,q])=>{let p=ps.find(x=>x.id===id);return `<div class="product"><div><b>${esc(p?.name||'Product')}</b><div class="price">${money((p?.price||0)*q)}</div></div><div class="qty"><button onclick="changeQty('${id}',-1)">−</button><b>${q}</b><button onclick="changeQty('${id}',1)">+</button></div></div>`}).join(''):'<div class="empty">Your cart is empty.</div>';
+cartTotal.textContent=money(cartTotal());
+let mine=db.orders.filter(o=>o.customer.phone===customer.phone);ordersList.innerHTML=mine.length?mine.map(orderCard).join(''):'<div class="empty">No orders yet.</div>';
+homeOrders.innerHTML=mine.slice(0,2).length?mine.slice(0,2).map(orderCard).join(''):'<div class="empty">No orders yet. Start your first order.</div>';
+}
+function generateQR(){
+if(!customer)return;
+myQR.innerHTML='';let data=location.href.split('#')[0]+'#login='+encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(customer)))));
+new QRCode(document.getElementById('myQR'),{text:data,width:220,height:220});
+qrText.textContent='Scan this QR on another device to open the customer app.';
+}
+function openQRScanner(){
+document.getElementById('qrModal').classList.add('show');
+if(!window.Html5Qrcode){alert('QR scanner library could not load. You can still log in with your phone number.');return}
+scanner=new Html5Qrcode('reader');
+scanner.start({facingMode:'environment'},{fps:10,qrbox:{width:230,height:230}},text=>{
+try{
+ let u=new URL(text);let token=u.hash.startsWith('#login=')?decodeURIComponent(u.hash.slice(7)):null;
+ if(!token)throw 0;let c=JSON.parse(decodeURIComponent(escape(atob(token))));
+ if(!c.name||!c.phone)throw 0;customer=c;localStorage.setItem('temibiyi_customer',JSON.stringify(customer));closeQRScanner();openApp();
+}catch(err){alert('This QR code is not a Temibiyi Herbs customer login QR.')}
+}).catch(()=>alert('Camera could not start. Please allow camera access or use normal login.'));
+}
+function closeQRScanner(){document.getElementById('qrModal').classList.remove('show');if(scanner){scanner.stop().catch(()=>{});scanner.clear();scanner=null}}
+window.addEventListener('hashchange',()=>{
+let h=location.hash;if(h.startsWith('#login=')){try{let c=JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(h.slice(7))))));if(c.name&&c.phone){customer=c;localStorage.setItem('temibiyi_customer',JSON.stringify(customer));history.replaceState(null,'',location.pathname+location.search);openApp()}}catch(e){}}
+});
+if(location.hash.startsWith('#login='))setTimeout(()=>window.dispatchEvent(new Event('hashchange')),100);
+</script>
+</body>
+</html>
