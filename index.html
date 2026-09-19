@@ -6,51 +6,746 @@
 <style>
 :root{--g:#1f7a4d;--g2:#eaf5ee;--ink:#173b2a;--bg:#f5f8f6;--line:#dbe7df;--red:#b33a3a}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}header{background:var(--g);color:white;padding:18px 16px;position:sticky;top:0;z-index:20}header h1{margin:0;font-size:22px}header p{margin:4px 0 0;font-size:12px;opacity:.9}.user{float:right;background:#ffffff22;border:1px solid #ffffff55;padding:6px 9px;border-radius:9px;font-size:11px}nav{display:flex;gap:7px;overflow:auto;padding:10px;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:76px;z-index:19}nav button{border:0;background:#edf4ef;color:var(--ink);padding:10px 12px;border-radius:10px;font-weight:700;white-space:nowrap}nav button.active{background:var(--g);color:#fff}main{max-width:1100px;margin:auto;padding:15px}.page{display:none}.page.active{display:block}.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.card,.panel{background:#fff;border:1px solid var(--line);border-radius:14px}.card{padding:14px}.card small{color:#6d7d73}.amount{font-size:21px;font-weight:800;margin-top:5px}.panel{padding:15px;margin-top:14px}h2{font-size:18px;margin:0 0 12px}form{display:grid;gap:10px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}input,select{width:100%;padding:12px;border:1px solid #cbd9d0;border-radius:10px;background:#fff;font:inherit}.btn{border:0;border-radius:10px;padding:12px 14px;font-weight:800;background:var(--g);color:#fff}.btn.secondary{background:var(--g2);color:var(--ink)}.btn.danger{background:var(--red)}.btn.small{padding:8px 10px;font-size:12px}.actions{display:flex;gap:8px;flex-wrap:wrap}.tablewrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:700px}th,td{padding:10px;border-bottom:1px solid var(--line);text-align:left;font-size:13px}th{background:#f3f7f4}.empty{text-align:center;color:#748178;padding:20px}.notice{background:#eef8f1;border-left:4px solid var(--g);padding:12px;border-radius:8px;font-size:13px}.login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}.loginbox{width:min(430px,100%);background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px}.modal{display:none;position:fixed;inset:0;background:#0008;z-index:50;align-items:center;justify-content:center;padding:18px}.modal.show{display:flex}.modalbox{background:#fff;width:min(520px,100%);border-radius:16px;padding:18px;max-height:90vh;overflow:auto}.modalhead{display:flex;justify-content:space-between;align-items:center}.close{border:0;background:#eee;border-radius:9px;padding:8px}footer{text-align:center;color:#78867d;font-size:12px;padding:25px}@media(min-width:700px){.cards{grid-template-columns:repeat(4,1fr)}}
 </style></head><body>
-<div id="login" class="login"><div class="loginbox"><h1>🌿 Temibiyi Herbs</h1><p>Herbal Sales Manager</p><div class="panel" style="margin-top:15px"><form onsubmit="login(event)"><input id="loginName" placeholder="Your name" required><select id="loginRole"><option>Admin</option><option>Cashier</option></select><input id="loginPin" type="password" placeholder="PIN (default 1234)" required><button class="btn">Sign in</button></form><p style="font-size:12px;color:#718078">Default PIN: <b>1234</b>. Change it in Settings after signing in.</p></div></div></div>
-<div id="app" style="display:none"><header><span class="user" id="userBadge"></span><h1>Temibiyi Herbs</h1><p>Herbal Sales Manager • 08086689511 • 09029424609</p></header>
-<nav><button class="active" onclick="show('dashboard',this)">Dashboard</button><button onclick="show('sales',this)">Sales</button><button onclick="show('products',this)">Stock</button><button onclick="show('expenses',this)">Expenses</button><button onclick="show('reports',this)">Reports</button><button onclick="show('settings',this)">Settings</button></nav>
+
+<div id="login" class="login">
+<div class="loginbox">
+<h1>🌿 Temibiyi Herbs</h1>
+<p>Herbal Sales Manager</p>
+<div class="panel" style="margin-top:15px">
+<form onsubmit="login(event)">
+<input id="loginName" placeholder="Your name" required>
+<select id="loginRole"><option>Admin</option><option>Cashier</option></select>
+<input id="loginPin" type="password" placeholder="PIN (default 1234)" required>
+<button class="btn">Sign in</button>
+</form>
+<p style="font-size:12px;color:#718078">Default PIN: <b>1234</b>. Change it in Settings after signing in.</p>
+</div>
+</div>
+</div>
+
+<div id="app" style="display:none">
+
+<header>
+<span class="user" id="userBadge"></span>
+<h1>Temibiyi Herbs</h1>
+<p>Herbal Sales Manager • 08086689511 • 09029424609</p>
+</header>
+
+<nav>
+<button class="active" onclick="show('dashboard',this)">Dashboard</button>
+<button onclick="show('sales',this)">Sales</button>
+<button onclick="show('products',this)">Stock</button>
+<button onclick="show('expenses',this)">Expenses</button>
+<button onclick="show('reports',this)">Reports</button>
+<button onclick="show('settings',this)">Settings</button>
+</nav>
+
 <main>
-<section id="dashboard" class="page active"><div class="cards"><div class="card"><small>Today's Sales</small><div class="amount" id="todaySales">₦0</div></div><div class="card"><small>Total Sales</small><div class="amount" id="totalSales">₦0</div></div><div class="card"><small>Stock Items</small><div class="amount" id="productCount">0</div></div><div class="card"><small>Expenses</small><div class="amount" id="totalExpenses">₦0</div></div></div>
-<div class="panel"><h2>Quick Sale</h2><form onsubmit="quickSale(event)"><div class="row"><input id="qsProduct" list="productList" placeholder="Product / herb name" required><input id="qsAmount" type="number" min="0" step="0.01" placeholder="Amount (₦)" required></div><datalist id="productList"></datalist><button class="btn">Record Sale</button></form></div>
-<div class="panel"><div class="notice">Tip: Add your herbs under <b>Stock</b>. You can now edit the stock name, quantity, cost price and selling price after entering them.</div></div></section>
-<section id="sales" class="page"><div class="panel"><h2>Record Sale</h2><form onsubmit="addSale(event)"><div class="row"><input id="saleProduct" list="productList2" placeholder="Product / herb name" required><input id="saleQty" type="number" min="1" value="1"></div><datalist id="productList2"></datalist><div class="row"><input id="salePrice" type="number" min="0" step="0.01" placeholder="Unit price (₦)" required><select id="salePayment"><option>Cash</option><option>Transfer</option><option>POS</option></select></div><button class="btn">Save Sale</button></form></div><div class="panel"><h2>Sales History</h2><div class="tablewrap"><table><thead><tr><th>Date</th><th>Product</th><th>Qty</th><th>Total</th><th>Payment</th><th>Cashier</th><th></th></tr></thead><tbody id="salesBody"></tbody></table></div></div></section>
-<section id="products" class="page"><div class="panel"><h2>Add Stock / Herb</h2><form onsubmit="addProduct(event)"><div class="row"><input id="prodName" placeholder="Stock / herb name" required><input id="prodStock" type="number" min="0" value="0" placeholder="Quantity in stock"></div><div class="row"><input id="prodBuy" type="number" min="0" step="0.01" placeholder="Cost price (₦)"><input id="prodSell" type="number" min="0" step="0.01" placeholder="Selling price (₦)" required></div><button class="btn">Add Stock</button></form></div><div class="panel"><h2>Stock Management</h2><p style="font-size:13px;color:#718078">Use <b>Edit</b> whenever you want to rename a stock or change its quantity/prices.</p><div class="tablewrap"><table><thead><tr><th>Stock / Herb</th><th>Qty</th><th>Cost</th><th>Selling</th><th>Value</th><th>Action</th></tr></thead><tbody id="productsBody"></tbody></table></div></div></section>
-<section id="expenses" class="page"><div class="panel"><h2>Add Expense</h2><form onsubmit="addExpense(event)"><div class="row"><input id="expDesc" placeholder="Description" required><input id="expAmount" type="number" min="0" step="0.01" placeholder="Amount (₦)" required></div><button class="btn">Save Expense</button></form></div><div class="panel"><h2>Expenses</h2><div class="tablewrap"><table><thead><tr><th>Date</th><th>Description</th><th>Amount</th><th></th></tr></thead><tbody id="expensesBody"></tbody></table></div></div></section>
-<section id="reports" class="page"><div class="panel"><h2>Business Reports</h2><div id="reportText"></div><div class="actions"><button class="btn secondary" onclick="exportCSV()">Export Sales CSV</button><button class="btn secondary" onclick="backup()">Backup Data</button><label class="btn secondary" style="cursor:pointer">Restore Data<input type="file" accept="application/json" onchange="restore(event)" hidden></label></div></div></section>
-<section id="settings" class="page"><div class="panel"><h2>Settings</h2><form onsubmit="changePin(event)"><input id="newPin" type="password" placeholder="New PIN (4+ digits)" minlength="4" required><button class="btn">Change PIN</button></form></div><div class="panel"><h2>Account</h2><button class="btn secondary" onclick="logout()">Sign out</button></div><div class="panel"><div class="notice">This version stores data locally on the device. Backup your data regularly. Cloud synchronization can be added in the production version.</div></div></section>
-</main><footer>Temibiyi Herbs • Herbal Manager</footer></div>
-<div id="editModal" class="modal"><div class="modalbox"><div class="modalhead"><h2>Edit Stock</h2><button class="close" onclick="closeEdit()">✕</button></div><form onsubmit="saveEdit(event)"><input type="hidden" id="editId"><input id="editName" placeholder="Stock / herb name" required><div class="row"><input id="editStock" type="number" min="0" placeholder="Quantity"><input id="editBuy" type="number" min="0" step="0.01" placeholder="Cost price"></div><input id="editSell" type="number" min="0" step="0.01" placeholder="Selling price" required><button class="btn">Save Changes</button></form></div></div>
+
+<section id="dashboard" class="page active">
+
+<div class="cards">
+<div class="card"><small>Today's Sales</small><div class="amount" id="todaySales">₦0</div></div>
+<div class="card"><small>Total Sales</small><div class="amount" id="totalSales">₦0</div></div>
+<div class="card"><small>Stock Items</small><div class="amount" id="productCount">0</div></div>
+<div class="card"><small>Expenses</small><div class="amount" id="totalExpenses">₦0</div></div>
+</div>
+
+<div class="panel">
+<h2>Quick Sale</h2>
+<form onsubmit="quickSale(event)">
+<div class="row">
+
+<select id="qsProduct" required>
+<option value="">Select product / herb</option>
+</select>
+
+<input id="qsAmount" type="number" min="0" step="0.01" placeholder="Amount (₦)" required>
+
+</div>
+<button class="btn">Record Sale</button>
+</form>
+</div>
+
+<div class="panel">
+<div class="notice">Tip: Add your herbs under <b>Stock</b>. You can now edit the stock name, quantity, cost price and selling price after entering them.</div>
+</div>
+
+</section>
+
+<section id="sales" class="page">
+
+<div class="panel">
+<h2>Record Sale</h2>
+
+<form onsubmit="addSale(event)">
+
+<div class="row">
+
+<select id="saleProduct" required onchange="setSalePrice()">
+<option value="">Select product / herb</option>
+</select>
+
+<input id="saleQty" type="number" min="1" value="1">
+
+</div>
+
+<div class="row">
+
+<input id="salePrice" type="number" min="0" step="0.01" placeholder="Unit price (₦)" required>
+
+<select id="salePayment">
+<option>Cash</option>
+<option>Transfer</option>
+<option>POS</option>
+</select>
+
+</div>
+
+<button class="btn">Save Sale</button>
+
+</form>
+</div>
+
+<div class="panel">
+<h2>Sales History</h2>
+<div class="tablewrap">
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Product</th>
+<th>Qty</th>
+<th>Total</th>
+<th>Payment</th>
+<th>Cashier</th>
+<th></th>
+</tr>
+</thead>
+<tbody id="salesBody"></tbody>
+</table>
+</div>
+</div>
+
+</section>
+
+<section id="products" class="page">
+
+<div class="panel">
+<h2>Add Stock / Herb</h2>
+
+<form onsubmit="addProduct(event)">
+
+<div class="row">
+<input id="prodName" placeholder="Stock / herb name" required>
+<input id="prodStock" type="number" min="0" value="0" placeholder="Quantity in stock">
+</div>
+
+<div class="row">
+<input id="prodBuy" type="number" min="0" step="0.01" placeholder="Cost price (₦)">
+<input id="prodSell" type="number" min="0" step="0.01" placeholder="Selling price (₦)" required>
+</div>
+
+<button class="btn">Add Stock</button>
+
+</form>
+</div>
+
+<div class="panel">
+<h2>Stock Management</h2>
+<p style="font-size:13px;color:#718078">Use <b>Edit</b> whenever you want to rename a stock or change its quantity/prices.</p>
+
+<div class="tablewrap">
+<table>
+<thead>
+<tr>
+<th>Stock / Herb</th>
+<th>Qty</th>
+<th>Cost</th>
+<th>Selling</th>
+<th>Value</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody id="productsBody"></tbody>
+</table>
+</div>
+</div>
+
+</section>
+
+<section id="expenses" class="page">
+
+<div class="panel">
+<h2>Add Expense</h2>
+
+<form onsubmit="addExpense(event)">
+<div class="row">
+<input id="expDesc" placeholder="Description" required>
+<input id="expAmount" type="number" min="0" step="0.01" placeholder="Amount (₦)" required>
+</div>
+<button class="btn">Save Expense</button>
+</form>
+
+</div>
+
+<div class="panel">
+<h2>Expenses</h2>
+
+<div class="tablewrap">
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Description</th>
+<th>Amount</th>
+<th></th>
+</tr>
+</thead>
+<tbody id="expensesBody"></tbody>
+</table>
+</div>
+</div>
+
+</section>
+
+<section id="reports" class="page">
+
+<div class="panel">
+<h2>Business Reports</h2>
+
+<div id="reportText"></div>
+
+<div class="actions">
+<button class="btn secondary" onclick="exportCSV()">Export Sales CSV</button>
+<button class="btn secondary" onclick="backup()">Backup Data</button>
+<label class="btn secondary" style="cursor:pointer">
+Restore Data
+<input type="file" accept="application/json" onchange="restore(event)" hidden>
+</label>
+</div>
+
+</div>
+
+</section>
+
+<section id="settings" class="page">
+
+<div class="panel">
+<h2>Settings</h2>
+
+<form onsubmit="changePin(event)">
+<input id="newPin" type="password" placeholder="New PIN (4+ digits)" minlength="4" required>
+<button class="btn">Change PIN</button>
+</form>
+
+</div>
+
+<div class="panel">
+<h2>Account</h2>
+<button class="btn secondary" onclick="logout()">Sign out</button>
+</div>
+
+<div class="panel">
+<div class="notice">
+This version stores data locally on the device. Backup your data regularly. Cloud synchronization can be added in the production version.
+</div>
+</div>
+
+</section>
+
+</main>
+
+<footer>Temibiyi Herbs • Herbal Manager</footer>
+
+</div>
+
+<div id="editModal" class="modal">
+
+<div class="modalbox">
+
+<div class="modalhead">
+<h2>Edit Stock</h2>
+<button class="close" onclick="closeEdit()">✕</button>
+</div>
+
+<form onsubmit="saveEdit(event)">
+
+<input type="hidden" id="editId">
+
+<input id="editName" placeholder="Stock / herb name" required>
+
+<div class="row">
+<input id="editStock" type="number" min="0" placeholder="Quantity">
+<input id="editBuy" type="number" min="0" step="0.01" placeholder="Cost price">
+</div>
+
+<input id="editSell" type="number" min="0" step="0.01" placeholder="Selling price" required>
+
+<button class="btn">Save Changes</button>
+
+</form>
+
+</div>
+</div>
+
 <script>
-const KEY='temibiyi_herbs_v1', AUTH='temibiyi_auth_v2';
+
+const KEY='temibiyi_herbs_v1',
+AUTH='temibiyi_auth_v2';
+
 let db=JSON.parse(localStorage.getItem(KEY)||'{"sales":[],"products":[],"expenses":[]}');
-let auth=JSON.parse(localStorage.getItem(AUTH)||'{"pin":"1234"}'); let user=null;
-const money=n=>'₦'+Number(n||0).toLocaleString('en-NG',{minimumFractionDigits:2,maximumFractionDigits:2});
-const save=()=>{localStorage.setItem(KEY,JSON.stringify(db));render()}; const now=()=>new Date().toISOString(); const dateTxt=x=>new Date(x).toLocaleString('en-NG');
-function login(e){e.preventDefault();if(loginPin.value!==auth.pin){alert('Incorrect PIN. Default PIN is 1234.');return}user={name:loginName.value.trim(),role:loginRole.value};localStorage.setItem('temibiyi_user',JSON.stringify(user));openApp()}
-function openApp(){document.getElementById('login').style.display='none';document.getElementById('app').style.display='block';user=JSON.parse(localStorage.getItem('temibiyi_user')||'null');userBadge.textContent=(user?.name||'User')+' • '+(user?.role||'Admin');render()}
-function logout(){localStorage.removeItem('temibiyi_user');location.reload()}
-if(localStorage.getItem('temibiyi_user'))openApp();
-function show(id,btn){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));btn.classList.add('active');render()}
-function addSale(e){e.preventDefault();let p=saleProduct.value.trim(),q=+saleQty.value||1,price=+salePrice.value||0;db.sales.unshift({id:Date.now(),date:now(),product:p,qty:q,total:q*price,payment:salePayment.value,cashier:user?.name||'User'});let item=db.products.find(x=>x.name.toLowerCase()===p.toLowerCase());if(item)item.stock=Math.max(0,item.stock-q);e.target.reset();saleQty.value=1;save()}
-function quickSale(e){e.preventDefault();let p=qsProduct.value.trim();db.sales.unshift({id:Date.now(),date:now(),product:p,qty:1,total:+qsAmount.value||0,payment:'Cash',cashier:user?.name||'User'});let item=db.products.find(x=>x.name.toLowerCase()===p.toLowerCase());if(item)item.stock=Math.max(0,item.stock-1);e.target.reset();save()}
-function addProduct(e){e.preventDefault();db.products.push({id:Date.now(),name:prodName.value.trim(),stock:+prodStock.value||0,buy:+prodBuy.value||0,sell:+prodSell.value||0});e.target.reset();save()}
-function addExpense(e){e.preventDefault();db.expenses.unshift({id:Date.now(),date:now(),desc:expDesc.value.trim(),amount:+expAmount.value||0});e.target.reset();save()}
-function editProduct(id){let x=db.products.find(p=>p.id===id);if(!x)return;editId.value=x.id;editName.value=x.name;editStock.value=x.stock;editBuy.value=x.buy;editSell.value=x.sell;editModal.classList.add('show')}
-function saveEdit(e){e.preventDefault();let x=db.products.find(p=>p.id==editId.value);if(x){x.name=editName.value.trim();x.stock=+editStock.value||0;x.buy=+editBuy.value||0;x.sell=+editSell.value||0;save();closeEdit()}}
-function closeEdit(){editModal.classList.remove('show')}
-function del(type,id){if(confirm('Delete this record?')){db[type]=db[type].filter(x=>x.id!==id);save()}}
-function changePin(e){e.preventDefault();auth.pin=newPin.value;localStorage.setItem(AUTH,JSON.stringify(auth));newPin.value='';alert('PIN changed successfully.')}
-function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
-function render(){
-let total=db.sales.reduce((a,x)=>a+x.total,0),expenses=db.expenses.reduce((a,x)=>a+x.amount,0),today=new Date().toLocaleDateString('en-NG');let td=db.sales.filter(x=>new Date(x.date).toLocaleDateString('en-NG')===today).reduce((a,x)=>a+x.total,0);
-if(!document.getElementById('app')||document.getElementById('app').style.display==='none')return;todaySales.textContent=money(td);totalSales.textContent=money(total);totalExpenses.textContent=money(expenses);productCount.textContent=db.products.length;
-let opts=db.products.map(x=>'<option value="'+esc(x.name)+'">').join('');productList.innerHTML=opts;productList2.innerHTML=opts;
-salesBody.innerHTML=db.sales.length?db.sales.map(x=>`<tr><td>${dateTxt(x.date)}</td><td>${esc(x.product)}</td><td>${x.qty}</td><td>${money(x.total)}</td><td>${x.payment}</td><td>${esc(x.cashier||'')}</td><td><button class="btn danger small" onclick="del('sales',${x.id})">Delete</button></td></tr>`).join(''):'<tr><td colspan="7" class="empty">No sales yet</td></tr>';
-productsBody.innerHTML=db.products.length?db.products.map(x=>`<tr><td><b>${esc(x.name)}</b></td><td>${x.stock}</td><td>${money(x.buy)}</td><td>${money(x.sell)}</td><td>${money(x.stock*x.sell)}</td><td><div class="actions"><button class="btn small" onclick="editProduct(${x.id})">Edit</button><button class="btn danger small" onclick="del('products',${x.id})">Delete</button></div></td></tr>`).join(''):'<tr><td colspan="6" class="empty">No stock added yet</td></tr>';
-expensesBody.innerHTML=db.expenses.length?db.expenses.map(x=>`<tr><td>${dateTxt(x.date)}</td><td>${esc(x.desc)}</td><td>${money(x.amount)}</td><td><button class="btn danger small" onclick="del('expenses',${x.id})">Delete</button></td></tr>`).join(''):'<tr><td colspan="4" class="empty">No expenses yet</td></tr>';
-let profit=total-expenses;reportText.innerHTML=`<p><b>Total sales:</b> ${money(total)}</p><p><b>Total expenses:</b> ${money(expenses)}</p><p><b>Estimated cash balance:</b> ${money(profit)}</p><p><b>Transactions:</b> ${db.sales.length}</p><p><b>Stock units:</b> ${db.products.reduce((a,x)=>a+x.stock,0)}</p>`;
+
+let auth=JSON.parse(localStorage.getItem(AUTH)||'{"pin":"1234"}');
+
+let user=null;
+
+const money=n=>'₦'+Number(n||0).toLocaleString('en-NG',{
+minimumFractionDigits:2,
+maximumFractionDigits:2
+});
+
+const save=()=>{
+localStorage.setItem(KEY,JSON.stringify(db));
+render()
+};
+
+const now=()=>new Date().toISOString();
+
+const dateTxt=x=>new Date(x).toLocaleString('en-NG');
+
+function login(e){
+e.preventDefault();
+
+if(loginPin.value!==auth.pin){
+alert('Incorrect PIN. Default PIN is 1234.');
+return
 }
-function exportCSV(){let rows=[['Date','Product','Quantity','Total','Payment','Cashier'],...db.sales.map(x=>[dateTxt(x.date),x.product,x.qty,x.total,x.payment,x.cashier||''])];let csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='temibiyi-herbs-sales.csv';a.click()}
-function backup(){let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:'application/json'}));a.download='temibiyi-herbs-backup.json';a.click()}
-function restore(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);if(x.sales&&x.products&&x.expenses){db=x;save();alert('Backup restored successfully.')}else throw 0}catch(_){alert('Invalid backup file.')}};r.readAsText(f)}
-</script></body></html>
+
+user={
+name:loginName.value.trim(),
+role:loginRole.value
+};
+
+localStorage.setItem('temibiyi_user',JSON.stringify(user));
+
+openApp()
+}
+
+function openApp(){
+
+document.getElementById('login').style.display='none';
+document.getElementById('app').style.display='block';
+
+user=JSON.parse(localStorage.getItem('temibiyi_user')||'null');
+
+userBadge.textContent=(user?.name||'User')+' • '+(user?.role||'Admin');
+
+render()
+}
+
+function logout(){
+localStorage.removeItem('temibiyi_user');
+location.reload()
+}
+
+if(localStorage.getItem('temibiyi_user'))openApp();
+
+function show(id,btn){
+
+document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+
+document.getElementById(id).classList.add('active');
+
+document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
+
+btn.classList.add('active');
+
+render()
+}
+
+function setSalePrice(){
+
+let selected=saleProduct.value;
+
+let item=db.products.find(
+x=>x.name.toLowerCase()===selected.toLowerCase()
+);
+
+if(item){
+salePrice.value=item.sell||0;
+}
+
+}
+
+function addSale(e){
+
+e.preventDefault();
+
+let p=saleProduct.value.trim(),
+q=+saleQty.value||1,
+price=+salePrice.value||0;
+
+if(!p){
+alert('Please select a product.');
+return
+}
+
+db.sales.unshift({
+id:Date.now(),
+date:now(),
+product:p,
+qty:q,
+total:q*price,
+payment:salePayment.value,
+cashier:user?.name||'User'
+});
+
+let item=db.products.find(
+x=>x.name.toLowerCase()===p.toLowerCase()
+);
+
+if(item)item.stock=Math.max(0,item.stock-q);
+
+e.target.reset();
+
+saleQty.value=1;
+
+save()
+}
+
+function quickSale(e){
+
+e.preventDefault();
+
+let p=qsProduct.value.trim();
+
+if(!p){
+alert('Please select a product.');
+return
+}
+
+db.sales.unshift({
+id:Date.now(),
+date:now(),
+product:p,
+qty:1,
+total:+qsAmount.value||0,
+payment:'Cash',
+cashier:user?.name||'User'
+});
+
+let item=db.products.find(
+x=>x.name.toLowerCase()===p.toLowerCase()
+);
+
+if(item)item.stock=Math.max(0,item.stock-1);
+
+e.target.reset();
+
+save()
+}
+
+function addProduct(e){
+
+e.preventDefault();
+
+let name=prodName.value.trim();
+
+if(!name){
+alert('Please enter a stock / herb name.');
+return
+}
+
+db.products.push({
+id:Date.now(),
+name:name,
+stock:+prodStock.value||0,
+buy:+prodBuy.value||0,
+sell:+prodSell.value||0
+});
+
+e.target.reset();
+
+save()
+}
+
+function addExpense(e){
+
+e.preventDefault();
+
+db.expenses.unshift({
+id:Date.now(),
+date:now(),
+desc:expDesc.value.trim(),
+amount:+expAmount.value||0
+});
+
+e.target.reset();
+
+save()
+}
+
+function editProduct(id){
+
+let x=db.products.find(p=>p.id===id);
+
+if(!x)return;
+
+editId.value=x.id;
+editName.value=x.name;
+editStock.value=x.stock;
+editBuy.value=x.buy;
+editSell.value=x.sell;
+
+editModal.classList.add('show')
+}
+
+function saveEdit(e){
+
+e.preventDefault();
+
+let x=db.products.find(p=>p.id==editId.value);
+
+if(x){
+
+x.name=editName.value.trim();
+x.stock=+editStock.value||0;
+x.buy=+editBuy.value||0;
+x.sell=+editSell.value||0;
+
+save();
+
+closeEdit()
+}
+}
+
+function closeEdit(){
+editModal.classList.remove('show')
+}
+
+function del(type,id){
+
+if(confirm('Delete this record?')){
+
+db[type]=db[type].filter(x=>x.id!==id);
+
+save()
+}
+}
+
+function changePin(e){
+
+e.preventDefault();
+
+auth.pin=newPin.value;
+
+localStorage.setItem(AUTH,JSON.stringify(auth));
+
+newPin.value='';
+
+alert('PIN changed successfully.')
+}
+
+function esc(s){
+
+return String(s).replace(/[&<>"']/g,m=>({
+'&':'&amp;',
+'<':'&lt;',
+'>':'&gt;',
+'"':'&quot;',
+"'":'&#039;'
+}[m]))
+}
+
+function render(){
+
+let total=db.sales.reduce((a,x)=>a+x.total,0),
+expenses=db.expenses.reduce((a,x)=>a+x.amount,0),
+today=new Date().toLocaleDateString('en-NG');
+
+let td=db.sales
+.filter(x=>new Date(x.date).toLocaleDateString('en-NG')===today)
+.reduce((a,x)=>a+x.total,0);
+
+if(!document.getElementById('app')||
+document.getElementById('app').style.display==='none')return;
+
+todaySales.textContent=money(td);
+totalSales.textContent=money(total);
+totalExpenses.textContent=money(expenses);
+productCount.textContent=db.products.length;
+
+
+/* PRODUCT DROPDOWNS */
+
+let productOptions='<option value="">Select product / herb</option>';
+
+productOptions+=db.products.map(x=>
+'<option value="'+esc(x.name)+'">'+esc(x.name)+'</option>'
+).join('');
+
+qsProduct.innerHTML=productOptions;
+saleProduct.innerHTML=productOptions;
+
+
+/* SALES HISTORY */
+
+salesBody.innerHTML=db.sales.length?
+
+db.sales.map(x=>`
+<tr>
+<td>${dateTxt(x.date)}</td>
+<td>${esc(x.product)}</td>
+<td>${x.qty}</td>
+<td>${money(x.total)}</td>
+<td>${x.payment}</td>
+<td>${esc(x.cashier||'')}</td>
+<td>
+<button class="btn danger small" onclick="del('sales',${x.id})">
+Delete
+</button>
+</td>
+</tr>
+`).join('')
+
+:'<tr><td colspan="7" class="empty">No sales yet</td></tr>';
+
+
+/* STOCK */
+
+productsBody.innerHTML=db.products.length?
+
+db.products.map(x=>`
+<tr>
+<td><b>${esc(x.name)}</b></td>
+<td>${x.stock}</td>
+<td>${money(x.buy)}</td>
+<td>${money(x.sell)}</td>
+<td>${money(x.stock*x.sell)}</td>
+<td>
+<div class="actions">
+<button class="btn small" onclick="editProduct(${x.id})">Edit</button>
+<button class="btn danger small" onclick="del('products',${x.id})">Delete</button>
+</div>
+</td>
+</tr>
+`).join('')
+
+:'<tr><td colspan="6" class="empty">No stock added yet</td></tr>';
+
+
+/* EXPENSES */
+
+expensesBody.innerHTML=db.expenses.length?
+
+db.expenses.map(x=>`
+<tr>
+<td>${dateTxt(x.date)}</td>
+<td>${esc(x.desc)}</td>
+<td>${money(x.amount)}</td>
+<td>
+<button class="btn danger small" onclick="del('expenses',${x.id})">
+Delete
+</button>
+</td>
+</tr>
+`).join('')
+
+:'<tr><td colspan="4" class="empty">No expenses yet</td></tr>';
+
+
+/* REPORT */
+
+let profit=total-expenses;
+
+reportText.innerHTML=`
+<p><b>Total sales:</b> ${money(total)}</p>
+<p><b>Total expenses:</b> ${money(expenses)}</p>
+<p><b>Estimated cash balance:</b> ${money(profit)}</p>
+<p><b>Transactions:</b> ${db.sales.length}</p>
+<p><b>Stock units:</b> ${db.products.reduce((a,x)=>a+x.stock,0)}</p>
+`;
+
+}
+
+function exportCSV(){
+
+let rows=[
+['Date','Product','Quantity','Total','Payment','Cashier'],
+...db.sales.map(x=>[
+dateTxt(x.date),
+x.product,
+x.qty,
+x.total,
+x.payment,
+x.cashier||''
+])
+];
+
+let csv=rows
+.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(','))
+.join('\n');
+
+let a=document.createElement('a');
+
+a.href=URL.createObjectURL(
+new Blob([csv],{type:'text/csv'})
+);
+
+a.download='temibiyi-herbs-sales.csv';
+
+a.click()
+}
+
+function backup(){
+
+let a=document.createElement('a');
+
+a.href=URL.createObjectURL(
+new Blob([JSON.stringify(db,null,2)],{type:'application/json'})
+);
+
+a.download='temibiyi-herbs-backup.json';
+
+a.click()
+}
+
+function restore(e){
+
+let f=e.target.files[0];
+
+if(!f)return;
+
+let r=new FileReader();
+
+r.onload=()=>{
+
+try{
+
+let x=JSON.parse(r.result);
+
+if(x.sales&&x.products&&x.expenses){
+
+db=x;
+
+save();
+
+alert('Backup restored successfully.')
+
+}else throw 0
+
+}catch(_){
+
+alert('Invalid backup file.')
+
+}
+
+};
+
+r.readAsText(f)
+}
+
+</script>
+
+</body></html> 
