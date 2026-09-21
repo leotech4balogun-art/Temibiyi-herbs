@@ -1,751 +1,1717 @@
 <!DOCTYPE html>
-<html lang="en"><head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#1f7a4d">
-<title>Temibiyi Herbs Manager</title>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Temibiyi Herbs - Admin</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
-:root{--g:#1f7a4d;--g2:#eaf5ee;--ink:#173b2a;--bg:#f5f8f6;--line:#dbe7df;--red:#b33a3a}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}header{background:var(--g);color:white;padding:18px 16px;position:sticky;top:0;z-index:20}header h1{margin:0;font-size:22px}header p{margin:4px 0 0;font-size:12px;opacity:.9}.user{float:right;background:#ffffff22;border:1px solid #ffffff55;padding:6px 9px;border-radius:9px;font-size:11px}nav{display:flex;gap:7px;overflow:auto;padding:10px;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:76px;z-index:19}nav button{border:0;background:#edf4ef;color:var(--ink);padding:10px 12px;border-radius:10px;font-weight:700;white-space:nowrap}nav button.active{background:var(--g);color:#fff}main{max-width:1100px;margin:auto;padding:15px}.page{display:none}.page.active{display:block}.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.card,.panel{background:#fff;border:1px solid var(--line);border-radius:14px}.card{padding:14px}.card small{color:#6d7d73}.amount{font-size:21px;font-weight:800;margin-top:5px}.panel{padding:15px;margin-top:14px}h2{font-size:18px;margin:0 0 12px}form{display:grid;gap:10px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}input,select{width:100%;padding:12px;border:1px solid #cbd9d0;border-radius:10px;background:#fff;font:inherit}.btn{border:0;border-radius:10px;padding:12px 14px;font-weight:800;background:var(--g);color:#fff}.btn.secondary{background:var(--g2);color:var(--ink)}.btn.danger{background:var(--red)}.btn.small{padding:8px 10px;font-size:12px}.actions{display:flex;gap:8px;flex-wrap:wrap}.tablewrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:700px}th,td{padding:10px;border-bottom:1px solid var(--line);text-align:left;font-size:13px}th{background:#f3f7f4}.empty{text-align:center;color:#748178;padding:20px}.notice{background:#eef8f1;border-left:4px solid var(--g);padding:12px;border-radius:8px;font-size:13px}.login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}.loginbox{width:min(430px,100%);background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px}.modal{display:none;position:fixed;inset:0;background:#0008;z-index:50;align-items:center;justify-content:center;padding:18px}.modal.show{display:flex}.modalbox{background:#fff;width:min(520px,100%);border-radius:16px;padding:18px;max-height:90vh;overflow:auto}.modalhead{display:flex;justify-content:space-between;align-items:center}.close{border:0;background:#eee;border-radius:9px;padding:8px}footer{text-align:center;color:#78867d;font-size:12px;padding:25px}@media(min-width:700px){.cards{grid-template-columns:repeat(4,1fr)}}
-</style></head><body>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f4f7f4;
+  color:#222;
+}
+header{
+  background:#176b3a;
+  color:white;
+  padding:16px;
+  text-align:center;
+}
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:15px;
+}
+.card{
+  background:white;
+  border-radius:12px;
+  padding:18px;
+  margin-bottom:16px;
+  box-shadow:0 2px 8px #0001;
+}
+h2,h3{margin-top:0;color:#176b3a}
+input,select,textarea,button{
+  width:100%;
+  padding:12px;
+  margin:6px 0;
+  border-radius:8px;
+  border:1px solid #ccc;
+  font-size:16px;
+}
+textarea{
+  min-height:90px;
+  resize:vertical;
+}
+button{
+  background:#176b3a;
+  color:white;
+  border:0;
+  cursor:pointer;
+}
+button:hover{opacity:.9}
+button.danger{background:#b3261e}
+button.secondary{background:#666}
+button.small{
+  width:auto;
+  padding:8px 12px;
+  font-size:14px;
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:12px;
+}
+.product{
+  border:1px solid #ddd;
+  border-radius:10px;
+  padding:12px;
+}
+.product img{
+  width:100%;
+  height:150px;
+  object-fit:cover;
+  border-radius:8px;
+  background:#eee;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+th,td{
+  padding:10px;
+  border-bottom:1px solid #ddd;
+  text-align:left;
+}
+.table-wrap{overflow-x:auto}
+.hidden{display:none}
+.notice{
+  padding:12px;
+  border-radius:8px;
+  background:#eef7ef;
+  margin-bottom:12px;
+}
+.login{
+  max-width:400px;
+  margin:70px auto;
+}
+.preview{
+  max-width:180px;
+  max-height:180px;
+  border-radius:10px;
+  margin-top:8px;
+}
+.stats{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:10px;
+}
+.stat{
+  background:#176b3a;
+  color:white;
+  padding:18px;
+  border-radius:10px;
+}
+.stat strong{
+  display:block;
+  font-size:24px;
+  margin-top:5px;
+}
+</style>
+</head>
 
-<div id="login" class="login">
-<div class="loginbox">
-<h1>🌿 Temibiyi Herbs</h1>
-<p>Herbal Sales Manager</p>
-<div class="panel" style="margin-top:15px">
-<form onsubmit="login(event)">
-<input id="loginName" placeholder="Your name" required>
-<select id="loginRole"><option>Admin</option><option>Cashier</option></select>
-<input id="loginPin" type="password" placeholder="PIN (default 1234)" required>
-<button class="btn">Sign in</button>
-</form>
-<p style="font-size:12px;color:#718078">Default PIN: <b>1234</b>. Change it in Settings after signing in.</p>
-</div>
-</div>
+<body>
+
+<!-- LOGIN -->
+<div id="loginPage" class="login card">
+  <h2>🌿 Temibiyi Herbs</h2>
+  <p>Admin Login</p>
+
+  <input id="loginPin" type="password" placeholder="Enter PIN">
+
+  <button onclick="login()">Login</button>
+
+  <p id="loginMsg"></p>
 </div>
 
-<div id="app" style="display:none">
+
+<!-- APP -->
+<div id="app" class="hidden">
 
 <header>
-<span class="user" id="userBadge"></span>
-<h1>Temibiyi Herbs</h1>
-<p>Herbal Sales Manager • 08086689511 • 09029424609</p>
+  <h2>🌿 Temibiyi Herbs</h2>
+  <div>Admin Dashboard</div>
 </header>
 
-<nav>
-<button class="active" onclick="show('dashboard',this)">Dashboard</button>
-<button onclick="show('sales',this)">Sales</button>
-<button onclick="show('products',this)">Stock</button>
-<button onclick="show('expenses',this)">Expenses</button>
-<button onclick="show('reports',this)">Reports</button>
-<button onclick="show('settings',this)">Settings</button>
-</nav>
+<div class="container">
 
-<main>
+  <!-- TOP BUTTONS -->
+  <div class="card">
+    <button onclick="refreshProducts()">🔄 Refresh Products</button>
+    <button class="secondary" onclick="logout()">Logout</button>
+  </div>
 
-<section id="dashboard" class="page active">
+  <!-- STATUS -->
+  <div id="status" class="notice">
+    Connecting to online product database...
+  </div>
 
-<div class="cards">
-<div class="card"><small>Today's Sales</small><div class="amount" id="todaySales">₦0</div></div>
-<div class="card"><small>Total Sales</small><div class="amount" id="totalSales">₦0</div></div>
-<div class="card"><small>Stock Items</small><div class="amount" id="productCount">0</div></div>
-<div class="card"><small>Expenses</small><div class="amount" id="totalExpenses">₦0</div></div>
+  <!-- DASHBOARD -->
+  <div class="card">
+    <h2>Dashboard</h2>
+
+    <div class="stats">
+      <div class="stat">
+        Products
+        <strong id="totalProducts">0</strong>
+      </div>
+
+      <div class="stat">
+        Stock Items
+        <strong id="totalStock">0</strong>
+      </div>
+
+      <div class="stat">
+        Stock Value
+        <strong id="stockValue">₦0</strong>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ADD PRODUCT -->
+  <div class="card">
+    <h2>➕ Add Product / Herb</h2>
+
+    <form id="productForm">
+
+      <label>Product / Herb Name</label>
+      <input id="prodName" required placeholder="e.g. Moringa Powder">
+
+      <label>Description</label>
+      <textarea id="prodDescription"
+        placeholder="Describe the product or its uses"></textarea>
+
+      <div class="grid">
+
+        <div>
+          <label>Stock Quantity</label>
+          <input id="prodStock" type="number" min="0" value="0" required>
+        </div>
+
+        <div>
+          <label>Buying Price (₦)</label>
+          <input id="prodBuy" type="number" min="0" value="0" required>
+        </div>
+
+        <div>
+          <label>Selling Price (₦)</label>
+          <input id="prodSell" type="number" min="0" value="0" required>
+        </div>
+
+      </div>
+
+      <label>Product Image</label>
+      <input id="prodImage" type="file" accept="image/*"
+             onchange="previewImage(event)">
+
+      <img id="imagePreview" class="preview hidden">
+
+      <button type="submit">
+        💾 Save Product
+      </button>
+
+    </form>
+  </div>
+
+
+  <!-- PRODUCTS -->
+  <div class="card">
+
+    <h2>📦 Products / Stock</h2>
+
+    <div class="table-wrap">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>Image</th>
+            <th>Product</th>
+            <th>Description</th>
+            <th>Qty</th>
+            <th>Cost</th>
+            <th>Selling</th>
+            <th>Value</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody id="productTable"></tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+
+  <!-- QUICK SALE -->
+  <div class="card">
+
+    <h2>💰 Quick Sale</h2>
+
+    <form id="quickSaleForm">
+
+      <select id="qsProduct" required>
+        <option value="">Select product / herb</option>
+      </select>
+
+      <input id="qsQty"
+             type="number"
+             min="1"
+             value="1"
+             required
+             placeholder="Quantity">
+
+      <button type="submit">
+        Record Quick Sale
+      </button>
+
+    </form>
+
+  </div>
+
+
+  <!-- RECORD SALE -->
+  <div class="card">
+
+    <h2>🧾 Record Sale</h2>
+
+    <form id="saleForm">
+
+      <select id="saleProduct"
+              required
+              onchange="setSalePrice()">
+
+        <option value="">Select product / herb</option>
+
+      </select>
+
+      <input id="saleQty"
+             type="number"
+             min="1"
+             value="1"
+             required
+             placeholder="Quantity">
+
+      <input id="salePrice"
+             type="number"
+             min="0"
+             required
+             placeholder="Selling price">
+
+      <input id="saleCustomer"
+             placeholder="Customer name (optional)">
+
+      <button type="submit">
+        Record Sale
+      </button>
+
+    </form>
+
+  </div>
+
+
+  <!-- SALES -->
+  <div class="card">
+
+    <h2>📊 Sales History</h2>
+
+    <div class="table-wrap">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Product</th>
+            <th>Qty</th>
+            <th>Price</th>
+            <th>Total</th>
+            <th>Customer</th>
+          </tr>
+        </thead>
+
+        <tbody id="salesTable"></tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+
+  <!-- EXPENSES -->
+  <div class="card">
+
+    <h2>💳 Expenses</h2>
+
+    <form id="expenseForm">
+
+      <input id="expenseName"
+             placeholder="Expense description"
+             required>
+
+      <input id="expenseAmount"
+             type="number"
+             min="0"
+             placeholder="Amount"
+             required>
+
+      <button type="submit">
+        Add Expense
+      </button>
+
+    </form>
+
+    <div class="table-wrap">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+
+        <tbody id="expenseTable"></tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+
+  <!-- REPORT -->
+  <div class="card">
+
+    <h2>📈 Reports</h2>
+
+    <div class="stats">
+
+      <div class="stat">
+        Total Sales
+        <strong id="reportSales">₦0</strong>
+      </div>
+
+      <div class="stat">
+        Expenses
+        <strong id="reportExpenses">₦0</strong>
+      </div>
+
+      <div class="stat">
+        Balance
+        <strong id="reportBalance">₦0</strong>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
 </div>
 
-<div class="panel">
-<h2>Quick Sale</h2>
-<form onsubmit="quickSale(event)">
-<div class="row">
-
-<select id="qsProduct" required>
-<option value="">Select product / herb</option>
-</select>
-
-<input id="qsAmount" type="number" min="0" step="0.01" placeholder="Amount (₦)" required>
-
-</div>
-<button class="btn">Record Sale</button>
-</form>
-</div>
-
-<div class="panel">
-<div class="notice">Tip: Add your herbs under <b>Stock</b>. You can now edit the stock name, quantity, cost price and selling price after entering them.</div>
-</div>
-
-</section>
-
-<section id="sales" class="page">
-
-<div class="panel">
-<h2>Record Sale</h2>
-
-<form onsubmit="addSale(event)">
-
-<div class="row">
-
-<select id="saleProduct" required onchange="setSalePrice()">
-<option value="">Select product / herb</option>
-</select>
-
-<input id="saleQty" type="number" min="1" value="1">
-
-</div>
-
-<div class="row">
-
-<input id="salePrice" type="number" min="0" step="0.01" placeholder="Unit price (₦)" required>
-
-<select id="salePayment">
-<option>Cash</option>
-<option>Transfer</option>
-<option>POS</option>
-</select>
-
-</div>
-
-<button class="btn">Save Sale</button>
-
-</form>
-</div>
-
-<div class="panel">
-<h2>Sales History</h2>
-<div class="tablewrap">
-<table>
-<thead>
-<tr>
-<th>Date</th>
-<th>Product</th>
-<th>Qty</th>
-<th>Total</th>
-<th>Payment</th>
-<th>Cashier</th>
-<th></th>
-</tr>
-</thead>
-<tbody id="salesBody"></tbody>
-</table>
-</div>
-</div>
-
-</section>
-
-<section id="products" class="page">
-
-<div class="panel">
-<h2>Add Stock / Herb</h2>
-
-<form onsubmit="addProduct(event)">
-
-<div class="row">
-<input id="prodName" placeholder="Stock / herb name" required>
-<input id="prodStock" type="number" min="0" value="0" placeholder="Quantity in stock">
-</div>
-
-<div class="row">
-<input id="prodBuy" type="number" min="0" step="0.01" placeholder="Cost price (₦)">
-<input id="prodSell" type="number" min="0" step="0.01" placeholder="Selling price (₦)" required>
-</div>
-
-<button class="btn">Add Stock</button>
-
-</form>
-</div>
-
-<div class="panel">
-<h2>Stock Management</h2>
-<p style="font-size:13px;color:#718078">Use <b>Edit</b> whenever you want to rename a stock or change its quantity/prices.</p>
-
-<div class="tablewrap">
-<table>
-<thead>
-<tr>
-<th>Stock / Herb</th>
-<th>Qty</th>
-<th>Cost</th>
-<th>Selling</th>
-<th>Value</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody id="productsBody"></tbody>
-</table>
-</div>
-</div>
-
-</section>
-
-<section id="expenses" class="page">
-
-<div class="panel">
-<h2>Add Expense</h2>
-
-<form onsubmit="addExpense(event)">
-<div class="row">
-<input id="expDesc" placeholder="Description" required>
-<input id="expAmount" type="number" min="0" step="0.01" placeholder="Amount (₦)" required>
-</div>
-<button class="btn">Save Expense</button>
-</form>
-
-</div>
-
-<div class="panel">
-<h2>Expenses</h2>
-
-<div class="tablewrap">
-<table>
-<thead>
-<tr>
-<th>Date</th>
-<th>Description</th>
-<th>Amount</th>
-<th></th>
-</tr>
-</thead>
-<tbody id="expensesBody"></tbody>
-</table>
-</div>
-</div>
-
-</section>
-
-<section id="reports" class="page">
-
-<div class="panel">
-<h2>Business Reports</h2>
-
-<div id="reportText"></div>
-
-<div class="actions">
-<button class="btn secondary" onclick="exportCSV()">Export Sales CSV</button>
-<button class="btn secondary" onclick="backup()">Backup Data</button>
-<label class="btn secondary" style="cursor:pointer">
-Restore Data
-<input type="file" accept="application/json" onchange="restore(event)" hidden>
-</label>
-</div>
-
-</div>
-
-</section>
-
-<section id="settings" class="page">
-
-<div class="panel">
-<h2>Settings</h2>
-
-<form onsubmit="changePin(event)">
-<input id="newPin" type="password" placeholder="New PIN (4+ digits)" minlength="4" required>
-<button class="btn">Change PIN</button>
-</form>
-
-</div>
-
-<div class="panel">
-<h2>Account</h2>
-<button class="btn secondary" onclick="logout()">Sign out</button>
-</div>
-
-<div class="panel">
-<div class="notice">
-This version stores data locally on the device. Backup your data regularly. Cloud synchronization can be added in the production version.
-</div>
-</div>
-
-</section>
-
-</main>
-
-<footer>Temibiyi Herbs • Herbal Manager</footer>
-
-</div>
-
-<div id="editModal" class="modal">
-
-<div class="modalbox">
-
-<div class="modalhead">
-<h2>Edit Stock</h2>
-<button class="close" onclick="closeEdit()">✕</button>
-</div>
-
-<form onsubmit="saveEdit(event)">
-
-<input type="hidden" id="editId">
-
-<input id="editName" placeholder="Stock / herb name" required>
-
-<div class="row">
-<input id="editStock" type="number" min="0" placeholder="Quantity">
-<input id="editBuy" type="number" min="0" step="0.01" placeholder="Cost price">
-</div>
-
-<input id="editSell" type="number" min="0" step="0.01" placeholder="Selling price" required>
-
-<button class="btn">Save Changes</button>
-
-</form>
-
-</div>
-</div>
 
 <script>
 
-const KEY='temibiyi_herbs_v1',
-AUTH='temibiyi_auth_v2';
+/* =========================================
+   SUPABASE
+========================================= */
 
-let db=JSON.parse(localStorage.getItem(KEY)||'{"sales":[],"products":[],"expenses":[]}');
+const SUPABASE_URL =
+'https://arzmrrgvbjetzqgoienx.supabase.co';
 
-let auth=JSON.parse(localStorage.getItem(AUTH)||'{"pin":"1234"}');
+const SUPABASE_KEY =
+'sb_publishable_LBVzWF-pRlVPuIZ_9JHf1w_DJx1ctl2';
 
-let user=null;
+const cloud =
+window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
 
-const money=n=>'₦'+Number(n||0).toLocaleString('en-NG',{
-minimumFractionDigits:2,
-maximumFractionDigits:2
-});
 
-const save=()=>{
-localStorage.setItem(KEY,JSON.stringify(db));
-render()
-};
+/* =========================================
+   LOCAL DATA
+========================================= */
 
-const now=()=>new Date().toISOString();
+const KEY = 'temibiyi_herbs_v1';
+const AUTH = 'temibiyi_auth_v2';
 
-const dateTxt=x=>new Date(x).toLocaleString('en-NG');
+let db = JSON.parse(
+  localStorage.getItem(KEY) ||
+  '{"sales":[],"products":[],"expenses":[]}'
+);
 
-function login(e){
-e.preventDefault();
 
-if(loginPin.value!==auth.pin){
-alert('Incorrect PIN. Default PIN is 1234.');
-return
+/* =========================================
+   HELPERS
+========================================= */
+
+function money(n){
+  return '₦' + Number(n || 0).toLocaleString();
 }
 
-user={
-name:loginName.value.trim(),
-role:loginRole.value
-};
-
-localStorage.setItem('temibiyi_user',JSON.stringify(user));
-
-openApp()
+function saveLocal(){
+  localStorage.setItem(KEY, JSON.stringify(db));
 }
 
-function openApp(){
-
-document.getElementById('login').style.display='none';
-document.getElementById('app').style.display='block';
-
-user=JSON.parse(localStorage.getItem('temibiyi_user')||'null');
-
-userBadge.textContent=(user?.name||'User')+' • '+(user?.role||'Admin');
-
-render()
+function showStatus(message){
+  document.getElementById('status').textContent = message;
 }
+
+
+/* =========================================
+   LOGIN
+========================================= */
+
+function login(){
+
+  const pin =
+    document.getElementById('loginPin').value;
+
+  if(pin === '1234'){
+
+    localStorage.setItem(
+      AUTH,
+      JSON.stringify({
+        logged:true,
+        role:'Admin'
+      })
+    );
+
+    document.getElementById('loginPage')
+      .classList.add('hidden');
+
+    document.getElementById('app')
+      .classList.remove('hidden');
+
+    refreshProducts();
+
+  }else{
+
+    document.getElementById('loginMsg')
+      .textContent = 'Incorrect PIN';
+
+  }
+}
+
 
 function logout(){
-localStorage.removeItem('temibiyi_user');
-location.reload()
-}
 
-if(localStorage.getItem('temibiyi_user'))openApp();
+  localStorage.removeItem(AUTH);
 
-function show(id,btn){
-
-document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
-
-document.getElementById(id).classList.add('active');
-
-document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
-
-btn.classList.add('active');
-
-render()
-}
-
-function setSalePrice(){
-
-let selected=saleProduct.value;
-
-let item=db.products.find(
-x=>x.name.toLowerCase()===selected.toLowerCase()
-);
-
-if(item){
-salePrice.value=item.sell||0;
-}
+  location.reload();
 
 }
 
-function addSale(e){
 
-e.preventDefault();
+/* =========================================
+   CHECK LOGIN
+========================================= */
 
-let p=saleProduct.value.trim(),
-q=+saleQty.value||1,
-price=+salePrice.value||0;
+function checkLogin(){
 
-if(!p){
-alert('Please select a product.');
-return
+  const auth =
+    JSON.parse(localStorage.getItem(AUTH) || 'null');
+
+  if(auth && auth.logged){
+
+    document.getElementById('loginPage')
+      .classList.add('hidden');
+
+    document.getElementById('app')
+      .classList.remove('hidden');
+
+    refreshProducts();
+
+  }
 }
 
-db.sales.unshift({
-id:Date.now(),
-date:now(),
-product:p,
-qty:q,
-total:q*price,
-payment:salePayment.value,
-cashier:user?.name||'User'
-});
 
-let item=db.products.find(
-x=>x.name.toLowerCase()===p.toLowerCase()
-);
+/* =========================================
+   IMAGE PREVIEW
+========================================= */
 
-if(item)item.stock=Math.max(0,item.stock-q);
+function previewImage(event){
 
-e.target.reset();
+  const file =
+    event.target.files[0];
 
-saleQty.value=1;
+  const preview =
+    document.getElementById('imagePreview');
 
-save()
+  if(!file){
+
+    preview.classList.add('hidden');
+    return;
+
+  }
+
+  preview.src =
+    URL.createObjectURL(file);
+
+  preview.classList.remove('hidden');
+
 }
 
-function quickSale(e){
 
-e.preventDefault();
+/* =========================================
+   LOAD PRODUCTS FROM SUPABASE
+========================================= */
 
-let p=qsProduct.value.trim();
+async function refreshProducts(){
 
-if(!p){
-alert('Please select a product.');
-return
+  showStatus(
+    '☁️ Loading products from Supabase...'
+  );
+
+  const { data, error } =
+    await cloud
+      .from('products')
+      .select('*')
+      .order('created_at', {
+        ascending:false
+      });
+
+  if(error){
+
+    console.error(error);
+
+    showStatus(
+      '⚠️ Could not load online products. Check Supabase connection.'
+    );
+
+    render();
+
+    return;
+  }
+
+
+  /*
+    Convert Supabase product format
+    into the Admin app format.
+  */
+
+  db.products =
+    (data || []).map(p => ({
+
+      id:p.id,
+
+      name:p.name || '',
+
+      description:p.description || '',
+
+      stock:Number(p.stock || 0),
+
+      buy:Number(p.buy_price || 0),
+
+      sell:Number(p.sell_price || 0),
+
+      image_url:p.image_url || ''
+
+    }));
+
+
+  saveLocal();
+
+  render();
+
+  showStatus(
+    '✅ Products are connected to Supabase.'
+  );
+
 }
 
-db.sales.unshift({
-id:Date.now(),
-date:now(),
-product:p,
-qty:1,
-total:+qsAmount.value||0,
-payment:'Cash',
-cashier:user?.name||'User'
-});
 
-let item=db.products.find(
-x=>x.name.toLowerCase()===p.toLowerCase()
-);
+/* =========================================
+   UPLOAD IMAGE
+========================================= */
 
-if(item)item.stock=Math.max(0,item.stock-1);
+async function uploadProductImage(file){
 
-e.target.reset();
+  if(!file){
+    return '';
+  }
 
-save()
+
+  const safeName =
+    file.name
+      .replace(/[^\w.-]/g,'_');
+
+
+  const path =
+    Date.now() +
+    '-' +
+    safeName;
+
+
+  const { error } =
+    await cloud
+      .storage
+      .from('product-images')
+      .upload(
+        path,
+        file,
+        {
+          upsert:true,
+          contentType:file.type
+        }
+      );
+
+
+  if(error){
+
+    console.error(error);
+
+    throw new Error(
+      'Image upload failed: ' +
+      error.message
+    );
+
+  }
+
+
+  const { data } =
+    cloud
+      .storage
+      .from('product-images')
+      .getPublicUrl(path);
+
+
+  return data.publicUrl;
+
 }
 
-function addProduct(e){
 
-e.preventDefault();
+/* =========================================
+   ADD PRODUCT
+========================================= */
 
-let name=prodName.value.trim();
+document
+  .getElementById('productForm')
+  .addEventListener(
+    'submit',
+    async function(e){
 
-if(!name){
-alert('Please enter a stock / herb name.');
-return
+      e.preventDefault();
+
+
+      const name =
+        document
+          .getElementById('prodName')
+          .value
+          .trim();
+
+
+      const description =
+        document
+          .getElementById('prodDescription')
+          .value
+          .trim();
+
+
+      const stock =
+        Number(
+          document
+            .getElementById('prodStock')
+            .value
+        );
+
+
+      const buy =
+        Number(
+          document
+            .getElementById('prodBuy')
+            .value
+        );
+
+
+      const sell =
+        Number(
+          document
+            .getElementById('prodSell')
+            .value
+        );
+
+
+      const file =
+        document
+          .getElementById('prodImage')
+          .files[0];
+
+
+      try{
+
+        showStatus(
+          '⏳ Saving product...'
+        );
+
+
+        let imageUrl = '';
+
+
+        if(file){
+
+          showStatus(
+            '🖼️ Uploading product image...'
+          );
+
+          imageUrl =
+            await uploadProductImage(file);
+
+        }
+
+
+        const { data, error } =
+          await cloud
+            .from('products')
+            .insert({
+
+              name:name,
+
+              description:description,
+
+              stock:stock,
+
+              buy_price:buy,
+
+              sell_price:sell,
+
+              image_url:imageUrl
+
+            })
+            .select()
+            .single();
+
+
+        if(error){
+
+          throw error;
+
+        }
+
+
+        alert(
+          '✅ Product added successfully!'
+        );
+
+
+        document
+          .getElementById('productForm')
+          .reset();
+
+
+        document
+          .getElementById('imagePreview')
+          .classList.add('hidden');
+
+
+        await refreshProducts();
+
+
+      }catch(error){
+
+        console.error(error);
+
+        alert(
+          '❌ Could not save product:\n' +
+          error.message
+        );
+
+        showStatus(
+          '⚠️ Product was not saved.'
+        );
+
+      }
+
+    }
+  );
+
+
+/* =========================================
+   EDIT PRODUCT
+========================================= */
+
+async function editProduct(id){
+
+  const product =
+    db.products.find(
+      p => String(p.id) === String(id)
+    );
+
+
+  if(!product){
+    return;
+  }
+
+
+  const name =
+    prompt(
+      'Product name:',
+      product.name
+    );
+
+  if(name === null){
+    return;
+  }
+
+
+  const description =
+    prompt(
+      'Description:',
+      product.description || ''
+    );
+
+  if(description === null){
+    return;
+  }
+
+
+  const stock =
+    prompt(
+      'Stock quantity:',
+      product.stock
+    );
+
+  if(stock === null){
+    return;
+  }
+
+
+  const buy =
+    prompt(
+      'Buying price:',
+      product.buy
+    );
+
+  if(buy === null){
+    return;
+  }
+
+
+  const sell =
+    prompt(
+      'Selling price:',
+      product.sell
+    );
+
+  if(sell === null){
+    return;
+  }
+
+
+  const { error } =
+    await cloud
+      .from('products')
+      .update({
+
+        name:name.trim(),
+
+        description:description.trim(),
+
+        stock:Number(stock),
+
+        buy_price:Number(buy),
+
+        sell_price:Number(sell),
+
+        updated_at:new Date().toISOString()
+
+      })
+      .eq('id', id);
+
+
+  if(error){
+
+    alert(
+      '❌ Update failed:\n' +
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  alert(
+    '✅ Product updated!'
+  );
+
+
+  refreshProducts();
+
 }
 
-db.products.push({
-id:Date.now(),
-name:name,
-stock:+prodStock.value||0,
-buy:+prodBuy.value||0,
-sell:+prodSell.value||0
-});
 
-e.target.reset();
+/* =========================================
+   DELETE PRODUCT
+========================================= */
 
-save()
+async function deleteProduct(id){
+
+  const product =
+    db.products.find(
+      p => String(p.id) === String(id)
+    );
+
+
+  if(!product){
+    return;
+  }
+
+
+  if(!confirm(
+    'Delete "' +
+    product.name +
+    '"?'
+  )){
+
+    return;
+
+  }
+
+
+  const { error } =
+    await cloud
+      .from('products')
+      .delete()
+      .eq('id', id);
+
+
+  if(error){
+
+    alert(
+      '❌ Delete failed:\n' +
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  alert(
+    '✅ Product deleted.'
+  );
+
+
+  refreshProducts();
+
 }
 
-function addExpense(e){
 
-e.preventDefault();
-
-db.expenses.unshift({
-id:Date.now(),
-date:now(),
-desc:expDesc.value.trim(),
-amount:+expAmount.value||0
-});
-
-e.target.reset();
-
-save()
-}
-
-function editProduct(id){
-
-let x=db.products.find(p=>p.id===id);
-
-if(!x)return;
-
-editId.value=x.id;
-editName.value=x.name;
-editStock.value=x.stock;
-editBuy.value=x.buy;
-editSell.value=x.sell;
-
-editModal.classList.add('show')
-}
-
-function saveEdit(e){
-
-e.preventDefault();
-
-let x=db.products.find(p=>p.id==editId.value);
-
-if(x){
-
-x.name=editName.value.trim();
-x.stock=+editStock.value||0;
-x.buy=+editBuy.value||0;
-x.sell=+editSell.value||0;
-
-save();
-
-closeEdit()
-}
-}
-
-function closeEdit(){
-editModal.classList.remove('show')
-}
-
-function del(type,id){
-
-if(confirm('Delete this record?')){
-
-db[type]=db[type].filter(x=>x.id!==id);
-
-save()
-}
-}
-
-function changePin(e){
-
-e.preventDefault();
-
-auth.pin=newPin.value;
-
-localStorage.setItem(AUTH,JSON.stringify(auth));
-
-newPin.value='';
-
-alert('PIN changed successfully.')
-}
-
-function esc(s){
-
-return String(s).replace(/[&<>"']/g,m=>({
-'&':'&amp;',
-'<':'&lt;',
-'>':'&gt;',
-'"':'&quot;',
-"'":'&#039;'
-}[m]))
-}
+/* =========================================
+   RENDER
+========================================= */
 
 function render(){
 
-let total=db.sales.reduce((a,x)=>a+x.total,0),
-expenses=db.expenses.reduce((a,x)=>a+x.amount,0),
-today=new Date().toLocaleDateString('en-NG');
+  renderProducts();
 
-let td=db.sales
-.filter(x=>new Date(x.date).toLocaleDateString('en-NG')===today)
-.reduce((a,x)=>a+x.total,0);
+  renderProductDropdowns();
 
-if(!document.getElementById('app')||
-document.getElementById('app').style.display==='none')return;
+  renderSales();
 
-todaySales.textContent=money(td);
-totalSales.textContent=money(total);
-totalExpenses.textContent=money(expenses);
-productCount.textContent=db.products.length;
+  renderExpenses();
 
+  renderReports();
 
-/* PRODUCT DROPDOWNS */
-
-let productOptions='<option value="">Select product / herb</option>';
-
-productOptions+=db.products.map(x=>
-'<option value="'+esc(x.name)+'">'+esc(x.name)+'</option>'
-).join('');
-
-qsProduct.innerHTML=productOptions;
-saleProduct.innerHTML=productOptions;
-
-
-/* SALES HISTORY */
-
-salesBody.innerHTML=db.sales.length?
-
-db.sales.map(x=>`
-<tr>
-<td>${dateTxt(x.date)}</td>
-<td>${esc(x.product)}</td>
-<td>${x.qty}</td>
-<td>${money(x.total)}</td>
-<td>${x.payment}</td>
-<td>${esc(x.cashier||'')}</td>
-<td>
-<button class="btn danger small" onclick="del('sales',${x.id})">
-Delete
-</button>
-</td>
-</tr>
-`).join('')
-
-:'<tr><td colspan="7" class="empty">No sales yet</td></tr>';
-
-
-/* STOCK */
-
-productsBody.innerHTML=db.products.length?
-
-db.products.map(x=>`
-<tr>
-<td><b>${esc(x.name)}</b></td>
-<td>${x.stock}</td>
-<td>${money(x.buy)}</td>
-<td>${money(x.sell)}</td>
-<td>${money(x.stock*x.sell)}</td>
-<td>
-<div class="actions">
-<button class="btn small" onclick="editProduct(${x.id})">Edit</button>
-<button class="btn danger small" onclick="del('products',${x.id})">Delete</button>
-</div>
-</td>
-</tr>
-`).join('')
-
-:'<tr><td colspan="6" class="empty">No stock added yet</td></tr>';
-
-
-/* EXPENSES */
-
-expensesBody.innerHTML=db.expenses.length?
-
-db.expenses.map(x=>`
-<tr>
-<td>${dateTxt(x.date)}</td>
-<td>${esc(x.desc)}</td>
-<td>${money(x.amount)}</td>
-<td>
-<button class="btn danger small" onclick="del('expenses',${x.id})">
-Delete
-</button>
-</td>
-</tr>
-`).join('')
-
-:'<tr><td colspan="4" class="empty">No expenses yet</td></tr>';
-
-
-/* REPORT */
-
-let profit=total-expenses;
-
-reportText.innerHTML=`
-<p><b>Total sales:</b> ${money(total)}</p>
-<p><b>Total expenses:</b> ${money(expenses)}</p>
-<p><b>Estimated cash balance:</b> ${money(profit)}</p>
-<p><b>Transactions:</b> ${db.sales.length}</p>
-<p><b>Stock units:</b> ${db.products.reduce((a,x)=>a+x.stock,0)}</p>
-`;
+  updateDashboard();
 
 }
 
-function exportCSV(){
 
-let rows=[
-['Date','Product','Quantity','Total','Payment','Cashier'],
-...db.sales.map(x=>[
-dateTxt(x.date),
-x.product,
-x.qty,
-x.total,
-x.payment,
-x.cashier||''
-])
-];
+/* =========================================
+   PRODUCT TABLE
+========================================= */
 
-let csv=rows
-.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(','))
-.join('\n');
+function renderProducts(){
 
-let a=document.createElement('a');
+  const tbody =
+    document.getElementById(
+      'productTable'
+    );
 
-a.href=URL.createObjectURL(
-new Blob([csv],{type:'text/csv'})
-);
 
-a.download='temibiyi-herbs-sales.csv';
+  if(!db.products.length){
 
-a.click()
+    tbody.innerHTML =
+      '<tr><td colspan="8">No products yet.</td></tr>';
+
+    return;
+
+  }
+
+
+  tbody.innerHTML =
+    db.products.map(p => `
+
+      <tr>
+
+        <td>
+          ${
+            p.image_url
+            ?
+            `<img src="${escapeHtml(p.image_url)}"
+                  style="width:65px;height:65px;object-fit:cover;border-radius:8px">`
+            :
+            '🌿'
+          }
+        </td>
+
+        <td>
+          <strong>
+            ${escapeHtml(p.name)}
+          </strong>
+        </td>
+
+        <td>
+          ${escapeHtml(
+            p.description || ''
+          )}
+        </td>
+
+        <td>
+          ${Number(p.stock)}
+        </td>
+
+        <td>
+          ${money(p.buy)}
+        </td>
+
+        <td>
+          ${money(p.sell)}
+        </td>
+
+        <td>
+          ${money(
+            Number(p.stock) *
+            Number(p.buy)
+          )}
+        </td>
+
+        <td>
+
+          <button
+            class="small"
+            onclick="editProduct('${p.id}')">
+            Edit
+          </button>
+
+          <button
+            class="small danger"
+            onclick="deleteProduct('${p.id}')">
+            Delete
+          </button>
+
+        </td>
+
+      </tr>
+
+    `).join('');
+
 }
 
-function backup(){
 
-let a=document.createElement('a');
+/* =========================================
+   DROPDOWNS
+========================================= */
 
-a.href=URL.createObjectURL(
-new Blob([JSON.stringify(db,null,2)],{type:'application/json'})
-);
+function renderProductDropdowns(){
 
-a.download='temibiyi-herbs-backup.json';
+  const options =
+    '<option value="">Select product / herb</option>' +
 
-a.click()
-}
+    db.products.map(p => `
 
-function restore(e){
+      <option value="${p.id}">
+        ${escapeHtml(p.name)}
+      </option>
 
-let f=e.target.files[0];
+    `).join('');
 
-if(!f)return;
 
-let r=new FileReader();
+  document.getElementById(
+    'qsProduct'
+  ).innerHTML = options;
 
-r.onload=()=>{
 
-try{
-
-let x=JSON.parse(r.result);
-
-if(x.sales&&x.products&&x.expenses){
-
-db=x;
-
-save();
-
-alert('Backup restored successfully.')
-
-}else throw 0
-
-}catch(_){
-
-alert('Invalid backup file.')
+  document.getElementById(
+    'saleProduct'
+  ).innerHTML = options;
 
 }
 
-};
 
-r.readAsText(f)
+/* =========================================
+   SALE PRICE
+========================================= */
+
+function setSalePrice(){
+
+  const id =
+    document.getElementById(
+      'saleProduct'
+    ).value;
+
+
+  const product =
+    db.products.find(
+      p => String(p.id) === String(id)
+    );
+
+
+  if(product){
+
+    document.getElementById(
+      'salePrice'
+    ).value = product.sell;
+
+  }
+
 }
+
+
+/* =========================================
+   QUICK SALE
+========================================= */
+
+document
+  .getElementById('quickSaleForm')
+  .addEventListener(
+    'submit',
+    async function(e){
+
+      e.preventDefault();
+
+
+      const id =
+        document.getElementById(
+          'qsProduct'
+        ).value;
+
+
+      const qty =
+        Number(
+          document.getElementById(
+            'qsQty'
+          ).value
+        );
+
+
+      const product =
+        db.products.find(
+          p => String(p.id) === String(id)
+        );
+
+
+      if(!product){
+        alert('Please select a product.');
+        return;
+      }
+
+
+      if(qty > product.stock){
+
+        alert(
+          'Not enough stock available.'
+        );
+
+        return;
+
+      }
+
+
+      const newStock =
+        product.stock - qty;
+
+
+      const { error } =
+        await cloud
+          .from('products')
+          .update({
+
+            stock:newStock,
+
+            updated_at:
+              new Date().toISOString()
+
+          })
+          .eq('id', id);
+
+
+      if(error){
+
+        alert(
+          'Sale failed:\n' +
+          error.message
+        );
+
+        return;
+
+      }
+
+
+      db.sales.unshift({
+
+        id:Date.now(),
+
+        date:new Date().toISOString(),
+
+        product:product.name,
+
+        qty:qty,
+
+        price:product.sell,
+
+        total:qty * product.sell,
+
+        customer:''
+
+      });
+
+
+      saveLocal();
+
+
+      alert(
+        '✅ Sale recorded.'
+      );
+
+
+      document
+        .getElementById(
+          'quickSaleForm'
+        )
+        .reset();
+
+
+      refreshProducts();
+
+    }
+  );
+
+
+/* =========================================
+   RECORD SALE
+========================================= */
+
+document
+  .getElementById('saleForm')
+  .addEventListener(
+    'submit',
+    async function(e){
+
+      e.preventDefault();
+
+
+      const id =
+        document.getElementById(
+          'saleProduct'
+        ).value;
+
+
+      const qty =
+        Number(
+          document.getElementById(
+            'saleQty'
+          ).value
+        );
+
+
+      const price =
+        Number(
+          document.getElementById(
+            'salePrice'
+          ).value
+        );
+
+
+      const customer =
+        document.getElementById(
+          'saleCustomer'
+        ).value;
+
+
+      const product =
+        db.products.find(
+          p => String(p.id) === String(id)
+        );
+
+
+      if(!product){
+
+        alert(
+          'Please select a product.'
+        );
+
+        return;
+
+      }
+
+
+      if(qty > product.stock){
+
+        alert(
+          'Not enough stock available.'
+        );
+
+        return;
+
+      }
+
+
+      const newStock =
+        product.stock - qty;
+
+
+      const { error } =
+        await cloud
+          .from('products')
+          .update({
+
+            stock:newStock,
+
+            updated_at:
+              new Date().toISOString()
+
+          })
+          .eq('id', id);
+
+
+      if(error){
+
+        alert(
+          'Sale failed:\n' +
+          error.message
+        );
+
+        return;
+
+      }
+
+
+      db.sales.unshift({
+
+        id:Date.now(),
+
+        date:new Date().toISOString(),
+
+        product:product.name,
+
+        qty:qty,
+
+        price:price,
+
+        total:qty * price,
+
+        customer:customer
+
+      });
+
+
+      saveLocal();
+
+
+      alert(
+        '✅ Sale recorded.'
+      );
+
+
+      document
+        .getElementById(
+          'saleForm'
+        )
+        .reset();
+
+
+      refreshProducts();
+
+    }
+  );
+
+
+/* =========================================
+   SALES TABLE
+========================================= */
+
+function renderSales(){
+
+  const tbody =
+    document.getElementById(
+      'salesTable'
+    );
+
+
+  if(!db.sales.length){
+
+    tbody.innerHTML =
+      '<tr><td colspan="6">No sales recorded yet.</td></tr>';
+
+    return;
+
+  }
+
+
+  tbody.innerHTML =
+    db.sales.map(s => `
+
+      <tr>
+
+        <td>
+          ${new Date(
+            s.date
+          ).toLocaleString()}
+        </td>
+
+        <td>
+          ${escapeHtml(s.product)}
+        </td>
+
+        <td>
+          ${s.qty}
+        </td>
+
+        <td>
+          ${money(s.price)}
+        </td>
+
+        <td>
+          ${money(s.total)}
+        </td>
+
+        <td>
+          ${escapeHtml(
+            s.customer || ''
+          )}
+        </td>
+
+      </tr>
+
+    `).join('');
+
+}
+
+
+/* =========================================
+   EXPENSES
+========================================= */
+
+document
+  .getElementById('expenseForm')
+  .addEventListener(
+    'submit',
+    function(e){
+
+      e.preventDefault();
+
+
+      const name =
+        document.getElementById(
+          'expenseName'
+        ).value;
+
+
+      const amount =
+        Number(
+          document.getElementById(
+            'expenseAmount'
+          ).value
+        );
+
+
+      db.expenses.unshift({
+
+        id:Date.now(),
+
+        date:new Date().toISOString(),
+
+        name:name,
+
+        amount:amount
+
+      });
+
+
+      saveLocal();
+
+      render();
+
+      e.target.reset();
+
+    }
+  );
+
+
+function renderExpenses(){
+
+  const tbody =
+    document.getElementById(
+      'expenseTable'
+    );
+
+
+  if(!db.expenses.length){
+
+    tbody.innerHTML =
+      '<tr><td colspan="3">No expenses yet.</td></tr>';
+
+    return;
+
+  }
+
+
+  tbody.innerHTML =
+    db.expenses.map(e => `
+
+      <tr>
+
+        <td>
+          ${new Date(
+            e.date
+          ).toLocaleString()}
+        </td>
+
+        <td>
+          ${escapeHtml(e.name)}
+        </td>
+
+        <td>
+          ${money(e.amount)}
+        </td>
+
+      </tr>
+
+    `).join('');
+
+}
+
+
+/* =========================================
+   REPORTS
+========================================= */
+
+function renderReports(){
+
+  const sales =
+    db.sales.reduce(
+      (sum,s) =>
+        sum + Number(s.total || 0),
+      0
+    );
+
+
+  const expenses =
+    db.expenses.reduce(
+      (sum,e) =>
+        sum + Number(e.amount || 0),
+      0
+    );
+
+
+  document.getElementById(
+    'reportSales'
+  ).textContent = money(sales);
+
+
+  document.getElementById(
+    'reportExpenses'
+  ).textContent = money(expenses);
+
+
+  document.getElementById(
+    'reportBalance'
+  ).textContent =
+    money(sales - expenses);
+
+}
+
+
+/* =========================================
+   DASHBOARD
+========================================= */
+
+function updateDashboard(){
+
+  document.getElementById(
+    'totalProducts'
+  ).textContent =
+    db.products.length;
+
+
+  const totalStock =
+    db.products.reduce(
+      (sum,p) =>
+        sum + Number(p.stock || 0),
+      0
+    );
+
+
+  const stockValue =
+    db.products.reduce(
+      (sum,p) =>
+        sum +
+        Number(p.stock || 0) *
+        Number(p.buy || 0),
+      0
+    );
+
+
+  document.getElementById(
+    'totalStock'
+  ).textContent =
+    totalStock;
+
+
+  document.getElementById(
+    'stockValue'
+  ).textContent =
+    money(stockValue);
+
+}
+
+
+/* =========================================
+   SECURITY FOR DISPLAYED TEXT
+========================================= */
+
+function escapeHtml(value){
+
+  return String(value ?? '')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#039;');
+
+}
+
+
+/* =========================================
+   START
+========================================= */
+
+checkLogin();
 
 </script>
 
-</body></html> 
+</body>
+</html>
